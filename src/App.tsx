@@ -38,7 +38,7 @@ function App() {
             target="_blank"
             rel="noopener noreferrer"
           >
-            Redux Toolkit
+            Reselect library
           </a>
           ,<span> and </span>
           <a
