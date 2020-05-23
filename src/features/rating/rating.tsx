@@ -51,10 +51,11 @@ export default class Rating extends Component<RatingsProps, RatingState> {
 
     handleFocus = (event: any):void =>{
         let parentRef:any = event.target.parentElement;
+        let updatedRating = 0;
         while(parentRef && !this.state.ratingSet){
             parentRef.firstElementChild?.classList.replace("empty", "full");
                 parentRef = parentRef.nextSibling;
-                let updatedRating = this.state.rating + 1
+                updatedRating += 1
                 this.setState({
                     rating: updatedRating
                 });
@@ -63,10 +64,11 @@ export default class Rating extends Component<RatingsProps, RatingState> {
 
     handleBlur = (event: any):void =>{
         let parentRef:any = event.target.parentElement;
+        let updatedRating = this.state.rating;
         while(parentRef&& !this.state.ratingSet){
             parentRef.firstElementChild?.classList.replace("full", "empty");
                 parentRef = parentRef.nextSibling;
-                let updatedRating = this.state.rating - 1
+                updatedRating -= 1;
                 this.setState({
                     rating: updatedRating
                 });
