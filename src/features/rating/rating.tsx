@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import './rating.scss'
+import { start } from 'repl';
 
 const svgStarPoints = "9.9, 1.1, 3.3, 21.78, 19.8, 8.58, 0, 8.58, 16.5, 21.78";
 
@@ -30,14 +31,19 @@ export default class Rating extends Component<RatingsProps, RatingState> {
 
     handleClick = (event: any):void =>{
         if(event.target){
-            let currentFill = event.target.firstElementChild.classList;
-            if(currentFill.contains("full")){
-                currentFill.replace("full","empty");
-                this.setState({ratingSet: false});
-            }else{
-                currentFill.replace("empty","full");
+            let parentRef = event.currentTarget;
+            let updatedRating = 0;
+            
+            while(parentRef && !this.state.ratingSet){
+                parentRef.firstElementChild.classList.add("full");
+                parentRef.firstElementChild.classList.remove("empty");
+                parentRef = parentRef.nextSibling;
+                updatedRating += 1
+            }
+            if(!this.state.ratingSet){
                 this.setState({
-                    ratingSet: true,
+                    rating: updatedRating,
+                    ratingSet: true
                 });
             }
         }
@@ -67,10 +73,22 @@ export default class Rating extends Component<RatingsProps, RatingState> {
         }
     }
 
+    handleReset = ()=>{
+
+        let childArr = this.inputRef.current.children;
+        Array.from(childArr).forEach((item: any)=>{
+           item.firstElementChild.classList.replace("full", "empty");
+        })
+        this.setState({
+            rating: 0,
+            ratingSet: false
+        })
+    }
+
     render() {
         return (
             <React.Fragment>
-            <div className="rating">
+            <div className="rating" ref={this.inputRef}>
                 
                 <svg height="40" width="40" className="svg-icon" onClick={this.handleClick}>
                     <polygon id = "one" className="star empty" 
@@ -100,6 +118,9 @@ export default class Rating extends Component<RatingsProps, RatingState> {
             </div>
             <div>
                     Rating : {this.state.rating}
+            </div>
+            <div>
+                <button onClick={this.handleReset}>Reset</button>
             </div>
             </React.Fragment>
         )
