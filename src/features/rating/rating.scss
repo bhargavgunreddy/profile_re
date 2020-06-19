@@ -2,15 +2,15 @@
     margin: 10px;
     display: flex;
     flex-direction: row-reverse;
+    background-color: var(--primary-color);
     .star{
 
         &.empty{
-        stroke:gray;
+        stroke: var(--gray-color);
         stroke-width:1;
         fill-rule:"nonzero";
-        fill: gray;
-        stroke: gray;
-
+        fill:var(--gray-color);
+        stroke:var(--gray-color);
         // &:hover{
         //     fill: yellowgreen;
         //     stroke: yellowgreen;
@@ -18,9 +18,13 @@
         }
         
         &.full{
-            fill: yellowgreen;
-            stroke: yellowgreen;
+            fill: var(--rating-color);
+            stroke: var(--rating-color);
             
         }
+    }
+
+    .svg-icon{
+        align-self: center;
     }
 }

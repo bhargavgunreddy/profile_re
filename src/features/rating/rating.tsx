@@ -92,27 +92,27 @@ export default class Rating extends Component<RatingsProps, RatingState> {
             <React.Fragment>
             <div className="rating" ref={this.inputRef}>
                 
-                <svg height="40" width="40" className="svg-icon" onClick={this.handleClick}>
+                <svg height="30" width="40" className="svg-icon" onClick={this.handleClick}>
                     <polygon id = "one" className="star empty" 
                     onMouseOver={this.handleFocus} onMouseOut={this.handleBlur}
                     points={svgStarPoints}/>
                 </svg>
-                <svg height="40" width="40" className="svg-icon" onClick={this.handleClick}>  
+                <svg height="30" width="40" className="svg-icon" onClick={this.handleClick}>  
                     <polygon id = "two" className="star empty"  
                     onMouseOver={this.handleFocus} onMouseOut={this.handleBlur}
                     points={svgStarPoints}/>
                 </svg>   
-                <svg height="40" width="40" className="svg-icon" onClick={this.handleClick}>
+                <svg height="30" width="40" className="svg-icon" onClick={this.handleClick}>
                     <polygon id = "three" className="star empty" 
                 onMouseOver={this.handleFocus} onMouseOut={this.handleBlur}
                 points={svgStarPoints}
                  /></svg>
-                <svg height="40" width="40" className="svg-icon" onClick={this.handleClick}>
+                <svg height="30" width="40" className="svg-icon" onClick={this.handleClick}>
                     <polygon id = "four" className="star empty"  
                     onMouseOver={this.handleFocus} onMouseOut={this.handleBlur}
                     points={svgStarPoints}
                  /></svg>
-                <svg height="40" width="40" className="svg-icon" onClick={this.handleClick}>
+                <svg height="30" width="40" className="svg-icon" onClick={this.handleClick}>
                     <polygon id = "five" className="star empty"  
                     onMouseOver={this.handleFocus} onMouseOut={this.handleBlur}
                     points={svgStarPoints}/>

@@ -1,0 +1,18 @@
+:root{
+    --color: #131519;
+    --background-color: #3ab9e4;
+    --primary-color: #406677;
+    --secondary-color: #52c4da;
+    --rating-color: #cd3299;
+    --gray-color: #edede7; 
+}
+
+
+div[data-theme='night'] *{
+    --color: white;
+    --background-color: #e4703a;
+    --primary-color: #775240;
+    --secondary-color: #da7952;
+    --rating-color: #9acd32;
+    --gray-color: #242324;
+}
