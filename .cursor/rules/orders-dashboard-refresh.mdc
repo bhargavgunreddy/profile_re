@@ -1,0 +1,17 @@
+---
+description: Standard flow after updating Orders.csv — rebuild enriched gains CSV, dashboard JSON, serve HTML.
+globs: Orders.csv
+alwaysApply: false
+---
+
+# Orders → dashboards workflow
+
+When `Orders.csv` is updated or the user asks to refresh dashboards / “orders live”:
+
+1. **Enriched trades CSV** (repo root): run `python3 src/polygon/build_gains_from_orders.py` (defaults: `Orders.csv` → `gainsandlosses_enriched.csv`).
+2. **Tradezilla JSON**: run `python3 src/polygon/build_trade_dashboard_data.py` with `--trades_csv gainsandlosses_enriched.csv` → `trade_dashboard_data.json` (uses `src/polygon/data/polygon` for SPY day direction when present).
+3. **Serve**: `python3 scripts/serve_pnl_calendar.py` from repo root — opens static dashboards: `pnl_calendar.html` (loads `gainsandlosses_enriched.csv` by default) and `tradezilla_dashboard.html` (loads `trade_dashboard_data.json`).
+
+**Shortcuts (repo root):** `npm run orders:refresh` — rebuild only; `npm run orders:live` — rebuild then `pnl:serve`. Or `bash scripts/refresh_orders_dashboard.sh` / same with `--no-serve`.
+
+Optional Polygon columns on the CSV (`enrich_option_day_highs.py`) are separate: API-heavy, not part of the default refresh script.

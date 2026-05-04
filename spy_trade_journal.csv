@@ -1,0 +1,4 @@
+Date,Day_Type,Direction_930,VWAP_Pos,Gap_Bucket,EV,Trade,Size
+2025-12-31,RANGE,Bear,Below VWAP,Small (<0.2%),0.6323999999999999,CALL,2000.0
+2025-12-31,TREND,Bear,Below VWAP,Small (<0.2%),1.8,PUT,2000.0
+2025-12-31,TREND,Bear,Below VWAP,Small (<0.2%),1.8,PUT,2000.0

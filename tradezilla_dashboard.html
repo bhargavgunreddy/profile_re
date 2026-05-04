@@ -1,0 +1,427 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tradezilla Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+    <style>
+      :root {
+        --bg: #060b16;
+        --bg2: #0c1324;
+        --card: rgba(255,255,255,0.05);
+        --stroke: rgba(255,255,255,0.10);
+        --text: rgba(255,255,255,0.92);
+        --muted: rgba(255,255,255,0.62);
+        --green: #22c55e;
+        --red: #ef4444;
+        --blue: #60a5fa;
+        --amber: #f59e0b;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+        background:
+          radial-gradient(1200px 700px at 10% 0%, rgba(96,165,250,0.18), transparent 55%),
+          radial-gradient(1200px 700px at 90% 0%, rgba(34,197,94,0.14), transparent 55%),
+          linear-gradient(180deg, var(--bg), var(--bg2));
+        color: var(--text);
+      }
+      .wrap { max-width: 1320px; margin: 0 auto; padding: 18px; }
+      .head {
+        display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; margin-bottom: 14px;
+      }
+      .head h1 { margin: 0; font-size: 24px; letter-spacing: -0.02em; }
+      .head p { margin: 4px 0 0; color: var(--muted); font-size: 13px; }
+      .controls { display: flex; gap: 8px; flex-wrap: wrap; }
+      .pill {
+        background: var(--card); border: 1px solid var(--stroke); border-radius: 999px; padding: 8px 10px;
+      }
+      .pill label { color: var(--muted); font-size: 12px; margin-right: 6px; }
+      .pill select, .pill input[type=file] {
+        background: rgba(255,255,255,0.08); border: 1px solid var(--stroke); color: var(--text); border-radius: 8px; padding: 5px 8px; font-size: 12px;
+      }
+      .btn {
+        border: 1px solid var(--stroke);
+        background: linear-gradient(180deg, rgba(255,255,255,0.14), rgba(255,255,255,0.06));
+        color: var(--text); border-radius: 12px; padding: 9px 12px; font-weight: 700; cursor: pointer;
+      }
+      .gridKpi {
+        display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 8px; margin-bottom: 10px;
+      }
+      .card {
+        background: var(--card); border: 1px solid var(--stroke); border-radius: 14px; padding: 10px;
+      }
+      .k { color: var(--muted); font-size: 12px; margin-bottom: 6px; }
+      .v { font-size: 20px; font-weight: 900; letter-spacing: -0.02em; }
+      .pos { color: var(--green); }
+      .neg { color: var(--red); }
+      .section {
+        background: var(--card); border: 1px solid var(--stroke); border-radius: 14px; padding: 10px; margin-bottom: 10px;
+      }
+      .section h3 { margin: 2px 0 10px; font-size: 15px; }
+      .chartWrap { height: 320px; }
+      .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+      .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+      table { width: 100%; border-collapse: collapse; }
+      th, td { font-size: 12px; padding: 7px 8px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+      th { text-align: left; color: var(--muted); }
+      td.num { text-align: right; font-variant-numeric: tabular-nums; }
+      .matrix {
+        display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px;
+      }
+      .mcell {
+        border: 1px solid var(--stroke); border-radius: 12px; padding: 10px; background: rgba(255,255,255,0.04);
+      }
+      .mcell .t { font-size: 12px; color: var(--muted); margin-bottom: 4px; }
+      .mcell .x { font-size: 18px; font-weight: 900; }
+      @media (max-width: 1150px) {
+        .gridKpi { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+        .grid2, .grid3 { grid-template-columns: 1fr; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="head">
+        <div>
+          <h1>Tradezilla-style Dashboard</h1>
+          <p id="meta">Loading…</p>
+        </div>
+        <div class="controls">
+          <div class="pill">
+            <label for="jsonFile">JSON:</label>
+            <input id="jsonFile" type="file" accept=".json" />
+          </div>
+          <button class="btn" id="reloadBtn" type="button">Reload</button>
+        </div>
+      </div>
+
+      <div class="gridKpi">
+        <div class="card"><div class="k">Trades</div><div class="v" id="kTrades">--</div></div>
+        <div class="card"><div class="k">Total P/L</div><div class="v" id="kTotal">--</div></div>
+        <div class="card"><div class="k">Win Rate</div><div class="v" id="kWinRate">--</div></div>
+        <div class="card"><div class="k">Profit Factor</div><div class="v" id="kPf">--</div></div>
+        <div class="card"><div class="k">Avg Win</div><div class="v" id="kAvgWin">--</div></div>
+        <div class="card"><div class="k">Avg Loss</div><div class="v" id="kAvgLoss">--</div></div>
+        <div class="card"><div class="k">Expectancy</div><div class="v" id="kExp">--</div></div>
+      </div>
+
+      <div class="section">
+        <h3>Equity Curve (Cumulative P/L by close date)</h3>
+        <div class="chartWrap"><canvas id="equityChart"></canvas></div>
+      </div>
+
+      <div class="grid2">
+        <div class="section">
+          <h3>Monthly P/L</h3>
+          <div class="chartWrap"><canvas id="monthlyChart"></canvas></div>
+        </div>
+        <div class="section">
+          <h3>Weekday P/L</h3>
+          <div class="chartWrap"><canvas id="weekdayChart"></canvas></div>
+        </div>
+      </div>
+
+      <div class="grid2">
+        <div class="section">
+          <h3>Time of Day P/L <span style="font-size:12px;color:var(--muted)">(click bar to see trades)</span></h3>
+          <div class="chartWrap" style="height:280px"><canvas id="todChart"></canvas></div>
+          <div id="todTrades" style="max-height:260px;overflow-y:auto;margin-top:8px;display:none"></div>
+        </div>
+        <div class="section">
+          <h3>Hold Time P/L <span style="font-size:12px;color:var(--muted)">(click bar to see trades)</span></h3>
+          <div class="chartWrap" style="height:280px"><canvas id="holdChart"></canvas></div>
+          <div id="holdTrades" style="max-height:260px;overflow-y:auto;margin-top:8px;display:none"></div>
+        </div>
+      </div>
+
+      <div class="grid2">
+        <div class="section">
+          <h3>Market Direction vs Trade Type</h3>
+          <div class="matrix" id="matrix"></div>
+        </div>
+        <div class="section">
+          <h3>Top Winners / Losers</h3>
+          <div class="grid2">
+            <div>
+              <table>
+                <thead><tr><th colspan="3">Winners</th></tr><tr><th>Date</th><th>Instrument</th><th class="num">P/L</th></tr></thead>
+                <tbody id="winsTbl"></tbody>
+              </table>
+            </div>
+            <div>
+              <table>
+                <thead><tr><th colspan="3">Losers</th></tr><tr><th>Date</th><th>Instrument</th><th class="num">P/L</th></tr></thead>
+                <tbody id="lossTbl"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const fmtMoney = (n) => `${n > 0 ? "+" : ""}${Number(n).toFixed(2)}`;
+      const fmtPct = (n) => `${n > 0 ? "+" : ""}${Number(n).toFixed(2)}%`;
+      const q = (id) => document.getElementById(id);
+      const charts = {};
+
+      function setVal(id, v, cls = "") {
+        const el = q(id);
+        el.textContent = v;
+        el.className = `v ${cls}`.trim();
+      }
+
+      function clsBySign(n) { return n >= 0 ? "pos" : "neg"; }
+
+      function killCharts() {
+        Object.values(charts).forEach((c) => c && c.destroy && c.destroy());
+      }
+
+      async function loadJsonDefault() {
+        const res = await fetch(`./trade_dashboard_data.json?ts=${Date.now()}`);
+        if (!res.ok) throw new Error(`Failed to load trade_dashboard_data.json (${res.status})`);
+        return await res.json();
+      }
+
+      function loadJsonFromFile(file) {
+        return new Promise((resolve, reject) => {
+          const r = new FileReader();
+          r.onload = () => {
+            try { resolve(JSON.parse(String(r.result || "{}"))); }
+            catch (e) { reject(e); }
+          };
+          r.onerror = reject;
+          r.readAsText(file);
+        });
+      }
+
+      function renderMatrix(data) {
+        const m = data.market_trade_matrix || {};
+        const items = [
+          ["CALL on UP days", m.CALL_UP],
+          ["CALL on DOWN days", m.CALL_DOWN],
+          ["PUT on UP days", m.PUT_UP],
+          ["PUT on DOWN days", m.PUT_DOWN],
+        ];
+        q("matrix").innerHTML = items.map(([name, v]) => {
+          const pnl = Number(v?.pnl || 0);
+          const wr = Number(v?.win_rate || 0);
+          const tr = Number(v?.trades || 0);
+          return `
+            <div class="mcell">
+              <div class="t">${name}</div>
+              <div class="x ${clsBySign(pnl)}">${fmtMoney(pnl)}</div>
+              <div class="t">Trades: ${tr} | Win rate: ${wr.toFixed(1)}%</div>
+            </div>
+          `;
+        }).join("");
+      }
+
+      function renderTopTable(id, rows) {
+        q(id).innerHTML = rows.map(r => `
+          <tr>
+            <td>${r.date}</td>
+            <td title="${r.instrument}">${(r.instrument || "").slice(0, 24)}</td>
+            <td class="num ${clsBySign(r.gain)}">${fmtMoney(r.gain)}</td>
+          </tr>
+        `).join("");
+      }
+
+      function renderCharts(data) {
+        killCharts();
+        const eq = data.equity_curve || [];
+        const mon = data.monthly || [];
+        const wd = data.weekday || [];
+
+        charts.equity = new Chart(q("equityChart"), {
+          type: "line",
+          data: {
+            labels: eq.map(x => x.date),
+            datasets: [{
+              label: "Cumulative P/L",
+              data: eq.map(x => x.cum_pnl),
+              borderColor: "#60a5fa",
+              backgroundColor: "rgba(96,165,250,0.15)",
+              fill: true,
+              tension: 0.25,
+              pointRadius: 2
+            }]
+          },
+          options: { responsive: true, maintainAspectRatio: false }
+        });
+
+        charts.monthly = new Chart(q("monthlyChart"), {
+          type: "bar",
+          data: {
+            labels: mon.map(x => x.month),
+            datasets: [{
+              label: "Monthly P/L",
+              data: mon.map(x => x.pnl),
+              backgroundColor: mon.map(x => Number(x.pnl) >= 0 ? "rgba(34,197,94,0.7)" : "rgba(239,68,68,0.7)")
+            }]
+          },
+          options: { responsive: true, maintainAspectRatio: false }
+        });
+
+        charts.weekday = new Chart(q("weekdayChart"), {
+          type: "bar",
+          data: {
+            labels: wd.map(x => x.weekday),
+            datasets: [{
+              label: "Weekday P/L",
+              data: wd.map(x => x.pnl),
+              backgroundColor: wd.map(x => Number(x.pnl) >= 0 ? "rgba(34,197,94,0.7)" : "rgba(239,68,68,0.7)")
+            }]
+          },
+          options: { responsive: true, maintainAspectRatio: false }
+        });
+
+        // Time of Day chart
+        const tod = data.time_of_day || [];
+        const allTrades = data.trades || [];
+        if (tod.length) {
+          charts.tod = renderClickableBarChart(
+            "todChart", "todTrades", tod, allTrades,
+            (t) => bucketForTime(t.close_time || "")
+          );
+        }
+
+        // Hold Time chart
+        const ht = data.hold_time || [];
+        if (ht.length) {
+          charts.hold = renderClickableBarChart(
+            "holdChart", "holdTrades", ht, allTrades,
+            (t) => bucketForHold(Number(t.hold_minutes || 0))
+          );
+        }
+      }
+
+      // --- Time bucket helpers ---
+      const TIME_BUCKETS = [
+        {label:"09:30-10:00", lo:"09:30", hi:"10:00"},
+        {label:"10:00-11:30", lo:"10:00", hi:"11:30"},
+        {label:"11:30-13:00", lo:"11:30", hi:"13:00"},
+        {label:"13:00-14:30", lo:"13:00", hi:"14:30"},
+        {label:"14:30-15:45", lo:"14:30", hi:"15:45"},
+        {label:"15:45-16:00", lo:"15:45", hi:"16:00"},
+      ];
+      const HOLD_BUCKETS = [
+        {label:"0-2 min", lo:0, hi:2},
+        {label:"2-5 min", lo:2, hi:5},
+        {label:"5-15 min", lo:5, hi:15},
+        {label:"15-30 min", lo:15, hi:30},
+        {label:"30-60 min", lo:30, hi:60},
+        {label:"60+ min", lo:60, hi:1e9},
+      ];
+
+      function bucketForTime(ct) {
+        if (!ct) return null;
+        for (const b of TIME_BUCKETS) { if (ct >= b.lo && ct < b.hi) return b.label; }
+        return null;
+      }
+      function bucketForHold(hm) {
+        if (!hm && hm !== 0) return null;
+        for (const b of HOLD_BUCKETS) { if (hm >= b.lo && hm < b.hi) return b.label; }
+        return null;
+      }
+
+      function renderTradeTable(containerId, trades) {
+        const el = q(containerId);
+        if (!trades.length) { el.style.display = "none"; return; }
+        el.style.display = "block";
+        const hdr = `<table><thead><tr><th>Date</th><th>Time</th><th>Instrument</th><th>Qty</th><th class="num">Cost</th><th class="num">P/L</th><th class="num">Hold</th></tr></thead><tbody>`;
+        const rows = trades.map(t => {
+          const g = Number(t.gain);
+          const hm = t.hold_minutes ? `${Number(t.hold_minutes).toFixed(0)}m` : "--";
+          return `<tr>
+            <td>${t.date}</td>
+            <td>${t.close_time || "--"}</td>
+            <td title="${t.instrument}">${(t.instrument||"").slice(0,28)}</td>
+            <td>${t.quantity}</td>
+            <td class="num">${Number(t.cost).toFixed(0)}</td>
+            <td class="num ${clsBySign(g)}">${fmtMoney(g)}</td>
+            <td class="num">${hm}</td>
+          </tr>`;
+        }).join("");
+        el.innerHTML = hdr + rows + `</tbody></table>`;
+      }
+
+      function renderClickableBarChart(canvasId, tradesContainerId, bucketRows, allTrades, matchFn) {
+        const labels = bucketRows.map(x => x.label);
+        const pnls = bucketRows.map(x => x.pnl);
+        const colors = pnls.map(v => v >= 0 ? "rgba(34,197,94,0.7)" : "rgba(239,68,68,0.7)");
+
+        const chart = new Chart(q(canvasId), {
+          type: "bar",
+          data: {
+            labels,
+            datasets: [{
+              label: "P/L",
+              data: pnls,
+              backgroundColor: colors,
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              tooltip: {
+                callbacks: {
+                  afterLabel: (ctx) => {
+                    const r = bucketRows[ctx.dataIndex];
+                    return `Trades: ${r.trades} | Win: ${r.win_rate.toFixed(1)}%`;
+                  }
+                }
+              }
+            },
+            onClick: (evt, elems) => {
+              if (!elems.length) { q(tradesContainerId).style.display = "none"; return; }
+              const idx = elems[0].index;
+              const label = labels[idx];
+              const matched = allTrades.filter(t => matchFn(t) === label);
+              matched.sort((a, b) => (b.date + (b.close_time||"")).localeCompare(a.date + (a.close_time||"")));
+              renderTradeTable(tradesContainerId, matched);
+            }
+          }
+        });
+        return chart;
+      }
+
+      function renderDashboard(data) {
+        const k = data.kpis || {};
+        setVal("kTrades", `${k.trades ?? 0}`);
+        setVal("kTotal", fmtMoney(k.total_pnl || 0), clsBySign(k.total_pnl || 0));
+        setVal("kWinRate", `${Number(k.win_rate || 0).toFixed(1)}%`);
+        setVal("kPf", k.profit_factor == null ? "--" : Number(k.profit_factor).toFixed(2));
+        setVal("kAvgWin", fmtMoney(k.avg_win || 0), "pos");
+        setVal("kAvgLoss", fmtMoney(k.avg_loss || 0), "neg");
+        setVal("kExp", fmtMoney(k.expectancy || 0), clsBySign(k.expectancy || 0));
+
+        q("meta").textContent = `Source: ${data.source_csv || "n/a"} | Generated: ${data.generated_at || "n/a"}`;
+        renderCharts(data);
+        renderMatrix(data);
+        renderTopTable("winsTbl", data.biggest_wins || []);
+        renderTopTable("lossTbl", data.biggest_losses || []);
+      }
+
+      async function reload() {
+        try {
+          const f = q("jsonFile").files?.[0];
+          const data = f ? await loadJsonFromFile(f) : await loadJsonDefault();
+          renderDashboard(data);
+        } catch (e) {
+          console.error(e);
+          alert(`Failed to load dashboard data: ${e?.message || e}`);
+        }
+      }
+
+      q("reloadBtn").addEventListener("click", reload);
+      q("jsonFile").addEventListener("change", reload);
+      reload();
+    </script>
+  </body>
+</html>
+

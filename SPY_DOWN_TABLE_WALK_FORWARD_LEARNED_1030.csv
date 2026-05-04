@@ -1,0 +1,13 @@
+Dir_930,VWAP_Pos,Gap_Bucket,Down_Prob,Count
+Bull,Above VWAP,Small,0.51,100
+Bear,Below VWAP,Medium,0.4588235294117647,85
+Bear,Below VWAP,Small,0.5569620253164557,79
+Bull,Above VWAP,Medium,0.4084507042253521,71
+Bear,Below VWAP,Large,0.4909090909090909,55
+Bull,Above VWAP,Large,0.25,48
+Bear,Above VWAP,Large,0.4375,16
+Bear,Above VWAP,Medium,0.5,14
+Bear,Above VWAP,Small,0.38461538461538464,13
+Bull,Below VWAP,Large,0.2857142857142857,7
+Bull,Below VWAP,Small,0.3333333333333333,6
+Bull,Below VWAP,Medium,0.5,4

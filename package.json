@@ -9,7 +9,7 @@
     "@testing-library/user-event": "^7.1.2",
     "@types/jest": "^24.0.0",
     "@types/node": "^12.0.0",
-    "@types/react": "^16.9.0",
+    "@types/react": "^16.9.0",              
     "@types/react-dom": "^16.9.0",
     "@types/react-redux": "^7.1.7",
     "node-sass": "^4.14.1",
@@ -24,6 +24,9 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
+    "pnl:serve": "python3 scripts/serve_pnl_calendar.py",
+    "orders:refresh": "bash scripts/refresh_orders_dashboard.sh --no-serve",
+    "orders:live": "bash scripts/refresh_orders_dashboard.sh",
     "heroku:deploy": "git push heroku master"
   },
   "eslintConfig": {
@@ -40,8 +43,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "engines": {
-    "node": "14.x"
   }
 }

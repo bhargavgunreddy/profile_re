@@ -1,0 +1,1177 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>P/L Calendar</title>
+
+    <!-- FullCalendar (open-source core) -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
+
+    <!-- PapaParse (CSV parsing) -->
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+
+    <style>
+      :root {
+        --bg0: #070a12;
+        --bg1: #0b1020;
+        --panel: rgba(255, 255, 255, 0.06);
+        --panel2: rgba(255, 255, 255, 0.08);
+        --stroke: rgba(255, 255, 255, 0.10);
+        --stroke2: rgba(255, 255, 255, 0.14);
+
+        --text: rgba(255, 255, 255, 0.92);
+        --muted: rgba(255, 255, 255, 0.60);
+
+        --green: #22c55e;
+        --red: #ef4444;
+        --blue: #60a5fa;
+        --amber: #f59e0b;
+
+        --shadow: 0 18px 60px rgba(0, 0, 0, 0.45);
+        --radius: 14px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto,
+          Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+        color: var(--text);
+        background:
+          radial-gradient(1200px 700px at 12% 12%, rgba(96, 165, 250, 0.22), transparent 55%),
+          radial-gradient(900px 600px at 88% 22%, rgba(34, 197, 94, 0.16), transparent 55%),
+          radial-gradient(1000px 700px at 55% 92%, rgba(239, 68, 68, 0.12), transparent 60%),
+          linear-gradient(180deg, var(--bg0), var(--bg1));
+        min-height: 100vh;
+      }
+
+      a {
+        color: var(--blue);
+        text-decoration: none;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+
+      .wrap {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 24px 16px 52px;
+      }
+
+      header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 16px;
+      }
+
+      .title h1 {
+        margin: 0;
+        font-size: 22px;
+        letter-spacing: -0.02em;
+        font-weight: 800;
+      }
+      .title p {
+        margin: 6px 0 0;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.35;
+      }
+
+      .toolbar {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+      }
+
+      .pill {
+        background: var(--panel);
+        border: 1px solid var(--stroke);
+        border-radius: 999px;
+        padding: 10px 12px;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        box-shadow: var(--shadow);
+      }
+
+      .pill label {
+        color: var(--muted);
+        font-size: 12px;
+        user-select: none;
+      }
+
+      .pill input[type="file"] {
+        color: var(--muted);
+        font-size: 12px;
+        max-width: 320px;
+      }
+
+      .pill select,
+      .pill input[type="date"] {
+        color: var(--text);
+        background: rgba(255, 255, 255, 0.07);
+        border: 1px solid var(--stroke2);
+        border-radius: 10px;
+        padding: 6px 8px;
+        font-size: 12px;
+        outline: none;
+        color-scheme: dark;
+      }
+
+      .btn {
+        appearance: none;
+        border: 1px solid var(--stroke2);
+        background: linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0.06));
+        color: var(--text);
+        padding: 10px 12px;
+        border-radius: 12px;
+        cursor: pointer;
+        font-weight: 700;
+        font-size: 13px;
+        transition: transform 0.12s ease, border-color 0.12s ease, background 0.12s ease;
+      }
+      .btn:hover {
+        transform: translateY(-1px);
+        border-color: rgba(96, 165, 250, 0.55);
+      }
+      .btn:active {
+        transform: translateY(0px);
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .card {
+        background: var(--panel);
+        border: 1px solid var(--stroke);
+        border-radius: var(--radius);
+        padding: 12px 12px;
+        box-shadow: var(--shadow);
+        min-height: 72px;
+      }
+      .card .k {
+        color: var(--muted);
+        font-size: 12px;
+        margin-bottom: 8px;
+      }
+      .card .v {
+        font-size: 18px;
+        font-weight: 900;
+        letter-spacing: -0.02em;
+      }
+
+      .pos {
+        color: var(--green);
+      }
+      .neg {
+        color: var(--red);
+      }
+      .neutral {
+        color: var(--amber);
+      }
+
+      .panel {
+        background: var(--panel);
+        border: 1px solid var(--stroke);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+      }
+
+      .panelHead {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 12px 14px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.06),
+          rgba(255, 255, 255, 0.03)
+        );
+      }
+
+      .panelHead .left {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+      .panelHead .left .h {
+        font-weight: 900;
+        letter-spacing: -0.02em;
+      }
+      .panelHead .left .s {
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      #calendar {
+        padding: 12px;
+      }
+
+      /* FullCalendar theming */
+      .fc {
+        --fc-page-bg-color: transparent;
+        --fc-border-color: rgba(255, 255, 255, 0.10);
+        --fc-neutral-bg-color: rgba(255, 255, 255, 0.04);
+        --fc-today-bg-color: rgba(96, 165, 250, 0.10);
+
+        --fc-button-bg-color: rgba(96, 165, 250, 0.18);
+        --fc-button-border-color: rgba(96, 165, 250, 0.26);
+        --fc-button-hover-bg-color: rgba(96, 165, 250, 0.26);
+        --fc-button-hover-border-color: rgba(96, 165, 250, 0.36);
+        --fc-button-active-bg-color: rgba(96, 165, 250, 0.34);
+        --fc-button-active-border-color: rgba(96, 165, 250, 0.46);
+      }
+
+      .fc .fc-toolbar-title {
+        font-size: 16px;
+        font-weight: 900;
+        letter-spacing: -0.02em;
+      }
+
+      .fc .fc-button {
+        box-shadow: none !important;
+        font-weight: 800;
+      }
+
+      .fc .fc-daygrid-day {
+        background: rgba(255, 255, 255, 0.02);
+        transition: background 0.12s ease, outline-color 0.12s ease;
+      }
+      .fc .fc-daygrid-day:hover {
+        background: rgba(255, 255, 255, 0.04);
+      }
+
+      .pnl-badge {
+        margin-top: 4px;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-weight: 900;
+        font-size: 12px;
+        padding: 4px 8px;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        background: rgba(0, 0, 0, 0.20);
+        user-select: none;
+      }
+      .pnl-badge.pos {
+        color: rgba(34, 197, 94, 0.98);
+        border-color: rgba(34, 197, 94, 0.35);
+        background: rgba(34, 197, 94, 0.10);
+      }
+      .pnl-badge.neg {
+        color: rgba(239, 68, 68, 0.98);
+        border-color: rgba(239, 68, 68, 0.35);
+        background: rgba(239, 68, 68, 0.10);
+      }
+
+      .pnl-sub {
+        margin-top: 6px;
+        color: var(--muted);
+        font-size: 11px;
+        line-height: 1.2;
+      }
+
+      /* Modal */
+      .overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.55);
+        display: none;
+        z-index: 20;
+      }
+      .overlay.on {
+        display: block;
+      }
+
+      .modal {
+        position: fixed;
+        inset: 0;
+        display: none;
+        z-index: 21;
+        padding: 20px;
+      }
+      .modal.on {
+        display: grid;
+        place-items: center;
+      }
+
+      .modalCard {
+        width: min(860px, 100%);
+        max-height: min(80vh, 820px);
+        overflow: auto;
+        background: rgba(10, 16, 32, 0.92);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 18px;
+        box-shadow: var(--shadow);
+        padding: 14px;
+        backdrop-filter: blur(14px);
+      }
+
+      .modalHead {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 10px;
+        margin-bottom: 12px;
+      }
+
+      .modalHead .t {
+        font-weight: 1000;
+        letter-spacing: -0.02em;
+      }
+      .modalHead .m {
+        margin-top: 4px;
+        font-size: 12px;
+        color: var(--muted);
+      }
+
+      .insightBadge {
+        margin-top: 8px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 5px 10px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 800;
+        border: 1px solid rgba(245, 158, 11, 0.35);
+        background: rgba(245, 158, 11, 0.12);
+        color: rgba(245, 158, 11, 0.98);
+      }
+
+      .xbtn {
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        background: rgba(255, 255, 255, 0.06);
+        color: var(--text);
+        width: 36px;
+        height: 36px;
+        border-radius: 12px;
+        cursor: pointer;
+        font-weight: 900;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        overflow: hidden;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.10);
+      }
+      thead th {
+        text-align: left;
+        font-size: 12px;
+        color: var(--muted);
+        font-weight: 900;
+        padding: 10px 10px;
+        background: rgba(255, 255, 255, 0.06);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+        position: sticky;
+        top: 0;
+        backdrop-filter: blur(10px);
+      }
+      tbody td {
+        padding: 9px 10px;
+        font-size: 13px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      }
+      tbody tr:hover {
+        background: rgba(255, 255, 255, 0.04);
+      }
+      td.num {
+        text-align: right;
+        font-variant-numeric: tabular-nums;
+      }
+
+      .footnote {
+        color: var(--muted);
+        font-size: 12px;
+        margin-top: 10px;
+        line-height: 1.35;
+      }
+
+      .monthlyWrap {
+        padding: 12px;
+      }
+      .monthlyTable {
+        width: 100%;
+        border-collapse: collapse;
+        border: 1px solid rgba(255, 255, 255, 0.10);
+        border-radius: 12px;
+        overflow: hidden;
+      }
+      .monthlyTable th,
+      .monthlyTable td {
+        padding: 8px 10px;
+        font-size: 12px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      }
+      .monthlyTable th {
+        color: var(--muted);
+        text-align: left;
+        background: rgba(255, 255, 255, 0.05);
+        font-weight: 900;
+      }
+      .monthlyTable td.num {
+        text-align: right;
+        font-variant-numeric: tabular-nums;
+      }
+      .deltaBar {
+        height: 10px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.09);
+        position: relative;
+        overflow: hidden;
+      }
+      .deltaBar > span {
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        border-radius: 999px;
+      }
+      .deltaBar .up {
+        background: rgba(34, 197, 94, 0.9);
+      }
+      .deltaBar .down {
+        background: rgba(239, 68, 68, 0.9);
+      }
+
+      @media (max-width: 980px) {
+        .stats {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header>
+        <div class="title">
+          <h1>Trading P/L Calendar</h1>
+          <p>
+            Loads <code>gainsandlosses.csv</code>, aggregates by <code>close_date</code>,
+            and renders net P/L per day (green = gain, red = loss). Click a day to
+            drill into individual closes.
+          </p>
+        </div>
+
+        <div class="toolbar">
+          <div class="pill">
+            <label for="csvFile">CSV (optional):</label>
+            <input id="csvFile" type="file" accept=".csv" />
+          </div>
+          <div class="pill">
+            <label for="filterMode">Filter:</label>
+            <select id="filterMode">
+              <option value="all">All days</option>
+              <option value="wins">Wins only</option>
+              <option value="losses">Losses only</option>
+              <option value="capped">Capped only</option>
+            </select>
+          </div>
+          <div class="pill">
+            <label for="displayMode">View:</label>
+            <select id="displayMode">
+              <option value="dollar">$ Amount</option>
+              <option value="percent">% Return</option>
+            </select>
+          </div>
+          <div class="pill">
+            <label for="pnlMode">P/L Mode:</label>
+            <select id="pnlMode">
+              <option value="actual">Actual</option>
+              <option value="stop50">Hard Stop -50%</option>
+            </select>
+          </div>
+          <div class="pill">
+            <label for="dateFrom">From:</label>
+            <input id="dateFrom" type="date" />
+          </div>
+          <div class="pill">
+            <label for="dateTo">To:</label>
+            <input id="dateTo" type="date" />
+          </div>
+          <button class="btn" id="btnClearDates" type="button">Clear dates</button>
+          <button class="btn" id="btnReload" type="button">Reload</button>
+        </div>
+      </header>
+
+      <div class="grid">
+        <div class="stats">
+          <div class="card">
+            <div class="k">Total P/L</div>
+            <div class="v" id="statTotal">--</div>
+          </div>
+          <div class="card">
+            <div class="k">Trading days</div>
+            <div class="v" id="statDays">--</div>
+          </div>
+          <div class="card">
+            <div class="k">Win rate</div>
+            <div class="v" id="statWinRate">--</div>
+          </div>
+          <div class="card">
+            <div class="k">Best day</div>
+            <div class="v" id="statBest">--</div>
+          </div>
+          <div class="card">
+            <div class="k">Worst day</div>
+            <div class="v" id="statWorst">--</div>
+          </div>
+        </div>
+
+        <section class="panel">
+          <div class="panelHead">
+            <div class="left">
+              <div class="h">Calendar</div>
+              <div class="s" id="subhead">Loading…</div>
+            </div>
+            <div class="right"></div>
+          </div>
+          <div id="calendar"></div>
+        </section>
+
+        <section class="panel">
+          <div class="panelHead">
+            <div class="left">
+              <div class="h">Monthly Distribution</div>
+              <div class="s">Actual vs Hard Stop -50% (trade-level cap)</div>
+            </div>
+            <div class="right"></div>
+          </div>
+          <div class="monthlyWrap">
+            <table class="monthlyTable">
+              <thead>
+                <tr>
+                  <th>Month</th>
+                  <th class="num">Trades</th>
+                  <th class="num">Capped</th>
+                  <th class="num">Actual</th>
+                  <th class="num">Stop-50</th>
+                  <th class="num">Delta</th>
+                  <th>Delta Bar</th>
+                </tr>
+              </thead>
+              <tbody id="monthlyRows"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <div class="footnote">
+          Tip: if you open this file via <code>file://</code>, the browser may block
+          fetching the CSV. Use the provided local server command so the page can
+          load <code>gainsandlosses.csv</code> reliably.
+        </div>
+      </div>
+    </div>
+
+    <div class="overlay" id="overlay"></div>
+    <div class="modal" id="modal">
+      <div class="modalCard">
+        <div class="modalHead">
+          <div>
+            <div class="t" id="modalTitle">Day details</div>
+            <div class="m" id="modalMeta"></div>
+            <div class="insightBadge" id="missedUpsideBadge" style="display:none"></div>
+          </div>
+          <button class="xbtn" id="btnClose" type="button">×</button>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Instrument</th>
+              <th class="num">Qty</th>
+              <th class="num">Cost</th>
+              <th class="num">Proceeds</th>
+              <th class="num">Comm</th>
+              <th class="num">Gain</th>
+              <th class="num">Gain %</th>
+              <th class="num">Day High</th>
+              <th class="num">Day High %</th>
+            </tr>
+          </thead>
+          <tbody id="modalRows"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <script>
+      // -------- Utilities --------
+      const fmtMoney = (n) => {
+        const sign = n > 0 ? "+" : "";
+        return `${sign}${n.toFixed(2)}`;
+      };
+      const fmtPct = (n) => {
+        const sign = n > 0 ? "+" : "";
+        return `${sign}${n.toFixed(2)}%`;
+      };
+
+      const clamp01 = (x) => Math.max(0, Math.min(1, x));
+
+      function parseNum(x) {
+        if (x === null || x === undefined) return 0;
+        const s = String(x).trim();
+        if (!s) return 0;
+        const v = Number(s);
+        return Number.isFinite(v) ? v : 0;
+      }
+
+      function parseDateMaybe(s) {
+        if (!s) return null;
+        const d = new Date(String(s));
+        return Number.isNaN(d.getTime()) ? null : d;
+      }
+
+      function inferHighTiming(highTsRaw, closeTsRaw) {
+        const highTs = parseDateMaybe(highTsRaw);
+        const closeTs = parseDateMaybe(closeTsRaw);
+        if (!highTs || !closeTs) return "--";
+        if (highTs.getTime() > closeTs.getTime()) return "After close";
+        if (highTs.getTime() < closeTs.getTime()) return "Before close";
+        return "At close";
+      }
+
+      // -------- State --------
+      let calendar = null;
+      let daily = new Map(); // dateStr -> { net, costSum, netPct, trades: [] }
+      let rawRows = [];
+      let maxAbs = 1;
+      let maxAbsPct = 1;
+      let sourceLabel = "";
+      let filterMode = "all";
+      let displayMode = "dollar";
+      let pnlMode = "actual";
+      let dateFrom = "";
+      let dateTo = "";
+
+      // -------- Modal --------
+      const overlayEl = document.getElementById("overlay");
+      const modalEl = document.getElementById("modal");
+      const btnClose = document.getElementById("btnClose");
+
+      function openModal(dateStr) {
+        const d = daily.get(dateStr);
+        if (!d) return;
+
+        const titleEl = document.getElementById("modalTitle");
+        const metaEl = document.getElementById("modalMeta");
+        const badgeEl = document.getElementById("missedUpsideBadge");
+        const rowsEl = document.getElementById("modalRows");
+
+        const cls = d.net >= 0 ? "pos" : "neg";
+        const modalWins = d.trades.filter((t) => t.gainNum > 0).length;
+        const modalLosses = d.trades.length - modalWins;
+        const modalWinPct = d.trades.length ? ((modalWins / d.trades.length) * 100).toFixed(1) : "0.0";
+        const winCls = Number(modalWinPct) >= 50 ? "pos" : "neg";
+        titleEl.innerHTML = `${dateStr} — <span class="${cls}">${fmtMoney(d.net)}</span> <span class="${cls}">(${fmtPct(d.netPct)})</span>`;
+        const dayComm = d.trades.reduce((s, t) => s + (t.commNum || 0), 0);
+        metaEl.innerHTML = `${d.trades.length} closes · <span class="${winCls}" style="font-weight:800">${modalWinPct}% win rate</span> · <span class="pos">${modalWins}W</span> / <span class="neg">${modalLosses}L</span> · <span style="color:var(--amber);font-weight:700">-$${dayComm.toFixed(2)} comm</span>`;
+
+        rowsEl.innerHTML = "";
+        let missedUpsidePct = 0;
+        let missedCount = 0;
+        for (const t of d.trades) {
+          if (
+            t.highTiming === "After close" &&
+            Number.isFinite(t.dayHighPct) &&
+            Number.isFinite(t.gainPct)
+          ) {
+            const diff = t.dayHighPct - t.gainPct;
+            if (diff > 0) {
+              missedUpsidePct += diff;
+              missedCount += 1;
+            }
+          }
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${escapeHtml(t.instrument)}</td>
+            <td class="num">${escapeHtml(t.quantity)}</td>
+            <td class="num">${escapeHtml(t.total_cost)}</td>
+            <td class="num">${escapeHtml(t.proceeds)}</td>
+            <td class="num" style="color:var(--amber)">${t.commNum > 0 ? "-" + t.commNum.toFixed(2) : "--"}</td>
+            <td class="num ${t.gainNum >= 0 ? "pos" : "neg"}">${fmtMoney(t.gainNum)}</td>
+            <td class="num ${t.gainPct >= 0 ? "pos" : "neg"}">${fmtPct(t.gainPct)}</td>
+            <td class="num">${t.dayHighNum > 0 ? escapeHtml((t.dayHighNum * 100).toFixed(2)) : "--"}</td>
+            <td class="num ${t.dayHighPct >= 0 ? "pos" : "neg"}">${Number.isFinite(t.dayHighPct) ? fmtPct(t.dayHighPct) : "--"}</td>
+          `;
+          rowsEl.appendChild(tr);
+        }
+
+        if (missedCount > 0) {
+          badgeEl.style.display = "inline-flex";
+          badgeEl.textContent = `Missed upside after close: +${missedUpsidePct.toFixed(2)}% (${missedCount} trade${missedCount === 1 ? "" : "s"})`;
+        } else {
+          badgeEl.style.display = "none";
+          badgeEl.textContent = "";
+        }
+
+        overlayEl.classList.add("on");
+        modalEl.classList.add("on");
+      }
+
+      function closeModal() {
+        overlayEl.classList.remove("on");
+        modalEl.classList.remove("on");
+      }
+
+      btnClose?.addEventListener("click", closeModal);
+      overlayEl?.addEventListener("click", closeModal);
+      window.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") closeModal();
+      });
+
+      function escapeHtml(s) {
+        return String(s)
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("'", "&#039;");
+      }
+
+      // -------- CSV loading --------
+      function getCsvFromQuery() {
+        const p = new URLSearchParams(window.location.search);
+        const raw = (p.get("csv") || "").trim();
+        // Default to enriched dataset so day-high analytics are populated.
+        if (!raw) return "gainsandlosses_enriched.csv";
+        // Keep it local/simple: allow only filename-like values
+        const safe = raw.replace(/[^a-zA-Z0-9._-]/g, "");
+        return safe || "gainsandlosses_enriched.csv";
+      }
+
+      async function loadDefaultCsv() {
+        // cache-bust so reload works without hard refresh
+        const csvName = getCsvFromQuery();
+        const url = `./${csvName}?ts=${Date.now()}`;
+        const res = await fetch(url);
+        if (!res.ok) {
+          throw new Error(`Failed to load ${csvName} (${res.status})`);
+        }
+        const txt = await res.text();
+        sourceLabel = csvName;
+        return txt;
+      }
+
+      function loadCsvFromFile(file) {
+        return new Promise((resolve, reject) => {
+          const r = new FileReader();
+          r.onload = () => resolve(String(r.result || ""));
+          r.onerror = () => reject(new Error("Failed to read file"));
+          r.readAsText(file);
+        });
+      }
+
+      function applyStopMode(gainNum, costNum) {
+        if (pnlMode === "stop50") {
+          return Math.max(gainNum, -0.5 * costNum);
+        }
+        return gainNum;
+      }
+
+      function recomputeDailyFromRawRows() {
+        daily = new Map();
+
+        for (const r of rawRows) {
+          const dateStr = (r.close_date || "").trim();
+          if (!dateStr) continue;
+
+          const gainRaw = parseNum(r.gain);
+          const costNum = parseNum(r.total_cost);
+          const cappedGain = Math.max(gainRaw, -0.5 * costNum);
+          const wasCapped = cappedGain !== gainRaw;
+          const gainNum = applyStopMode(gainRaw, costNum);
+          const gainPct = costNum > 0 ? (gainNum / costNum) * 100 : 0;
+          const dayHighNum = parseNum(
+            r.close_day_option_high || r.day_high_option_price || ""
+          );
+          const costPerShare = parseNum(r.cost_per_share);
+          const dayHighPctRaw = parseNum(
+            r.close_day_max_return_pct || r.day_high_return_pct || ""
+          );
+          const dayHighPct = Number.isFinite(dayHighPctRaw) && dayHighPctRaw !== 0
+            ? dayHighPctRaw
+            : (dayHighNum > 0 && costPerShare > 0
+              ? ((dayHighNum - costPerShare) / costPerShare) * 100
+              : Number.NaN);
+          const highTiming =
+            (r.close_day_high_timing || "").trim() ||
+            inferHighTiming(
+              r.close_day_option_high_time || r.day_high_time || "",
+              r.close_time || r.exit_time || r.close_timestamp || ""
+            );
+
+          const entry = daily.get(dateStr) || { net: 0, costSum: 0, netPct: 0, trades: [] };
+          entry.net += gainNum;
+          entry.costSum += costNum;
+          const commNum = parseNum(r.commission);
+
+          entry.trades.push({
+            instrument: r.instrument || "",
+            quantity: r.quantity || "",
+            total_cost: r.total_cost || "",
+            proceeds: r.proceeds || "",
+            gainNum,
+            gainRaw,
+            gainPct,
+            commNum,
+            wasCapped,
+            dayHighNum,
+            dayHighPct,
+            highTiming,
+          });
+          daily.set(dateStr, entry);
+        }
+
+        maxAbs = 1;
+        maxAbsPct = 1;
+        for (const [, v] of daily) {
+          v.netPct = v.costSum > 0 ? (v.net / v.costSum) * 100 : 0;
+          v.hasCapped = v.trades.some((t) => t.wasCapped);
+          maxAbs = Math.max(maxAbs, Math.abs(v.net));
+          maxAbsPct = Math.max(maxAbsPct, Math.abs(v.netPct));
+        }
+      }
+
+      function buildDailyFromRows(rows) {
+        rawRows = rows.slice();
+        recomputeDailyFromRawRows();
+      }
+
+      function passDateRange(dateStr) {
+        if (dateFrom && dateStr < dateFrom) return false;
+        if (dateTo && dateStr > dateTo) return false;
+        return true;
+      }
+
+      function passFilter(dayData) {
+        if (filterMode === "wins") return dayData.net > 0;
+        if (filterMode === "losses") return dayData.net < 0;
+        if (filterMode === "capped") return !!dayData.hasCapped;
+        return true;
+      }
+
+      function getFilteredEntries() {
+        return Array.from(daily.entries()).filter(([dateStr, d]) => passDateRange(dateStr) && passFilter(d));
+      }
+
+      function formatDayValue(d) {
+        return displayMode === "percent" ? fmtPct(d.netPct) : fmtMoney(d.net);
+      }
+
+      function renderMonthlyDistribution() {
+        const monthly = new Map();
+        for (const r of rawRows) {
+          const dateStr = (r.close_date || "").trim();
+          if (!dateStr || dateStr.length < 7) continue;
+          if (!passDateRange(dateStr)) continue;
+          const ym = dateStr.slice(0, 7);
+          const gainRaw = parseNum(r.gain);
+          const costNum = parseNum(r.total_cost);
+          const stopGain = Math.max(gainRaw, -0.5 * costNum);
+          const wasCapped = stopGain !== gainRaw;
+
+          const agg = monthly.get(ym) || {
+            month: ym,
+            trades: 0,
+            capped: 0,
+            actual: 0,
+            stop50: 0,
+          };
+          agg.trades += 1;
+          agg.capped += wasCapped ? 1 : 0;
+          agg.actual += gainRaw;
+          agg.stop50 += stopGain;
+          monthly.set(ym, agg);
+        }
+
+        const rows = Array.from(monthly.values()).sort((a, b) => a.month.localeCompare(b.month));
+        const maxDelta = Math.max(1, ...rows.map((x) => Math.abs(x.stop50 - x.actual)));
+        const tbody = document.getElementById("monthlyRows");
+        if (!tbody) return;
+        tbody.innerHTML = "";
+
+        for (const m of rows) {
+          const delta = m.stop50 - m.actual;
+          const w = Math.max(2, Math.round((Math.abs(delta) / maxDelta) * 100));
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${escapeHtml(m.month)}</td>
+            <td class="num">${m.trades}</td>
+            <td class="num">${m.capped}</td>
+            <td class="num ${m.actual >= 0 ? "pos" : "neg"}">${fmtMoney(m.actual)}</td>
+            <td class="num ${m.stop50 >= 0 ? "pos" : "neg"}">${fmtMoney(m.stop50)}</td>
+            <td class="num ${delta >= 0 ? "pos" : "neg"}">${fmtMoney(delta)}</td>
+            <td><div class="deltaBar"><span class="${delta >= 0 ? "up" : "down"}" style="width:${w}%"></span></div></td>
+          `;
+          tbody.appendChild(tr);
+        }
+      }
+
+      function setStats() {
+        const entries = getFilteredEntries();
+        const vals = entries.map(([, d]) => d.net);
+        const totalCost = entries.reduce((a, [, d]) => a + d.costSum, 0);
+        const totalPct = totalCost > 0 ? (vals.reduce((a, b) => a + b, 0) / totalCost) * 100 : 0;
+        const total = vals.reduce((a, b) => a + b, 0);
+        const days = vals.length;
+        const wins = vals.filter((x) => x > 0).length;
+        const winRate = days ? (wins / days) * 100 : 0;
+        const best = days ? Math.max(...vals) : 0;
+        const worst = days ? Math.min(...vals) : 0;
+
+        const statTotal = document.getElementById("statTotal");
+        statTotal.textContent = `${fmtMoney(total)} (${fmtPct(totalPct)})`;
+        statTotal.className = `v ${total >= 0 ? "pos" : "neg"}`;
+
+        document.getElementById("statDays").textContent = String(days);
+        document.getElementById("statWinRate").textContent = `${winRate.toFixed(1)}%`;
+
+        const statBest = document.getElementById("statBest");
+        statBest.textContent = fmtMoney(best);
+        statBest.className = `v ${best >= 0 ? "pos" : "neg"}`;
+
+        const statWorst = document.getElementById("statWorst");
+        statWorst.textContent = fmtMoney(worst);
+        statWorst.className = `v ${worst >= 0 ? "pos" : "neg"}`;
+      }
+
+      function buildEvents() {
+        const events = [];
+        const entries = getFilteredEntries();
+        const scaleDenom = displayMode === "percent" ? maxAbsPct : maxAbs;
+        for (const [dateStr, d] of entries) {
+          const isPos = d.net >= 0;
+          const metric = displayMode === "percent" ? d.netPct : d.net;
+          const intensity = 0.18 + 0.42 * clamp01(Math.abs(metric) / Math.max(1e-9, scaleDenom));
+          const bg = isPos
+            ? `rgba(34, 197, 94, ${intensity})`
+            : `rgba(239, 68, 68, ${intensity})`;
+
+          events.push({
+            id: dateStr,
+            title: formatDayValue(d),
+            start: dateStr,
+            allDay: true,
+            backgroundColor: bg,
+            borderColor: isPos ? "rgba(34,197,94,0.65)" : "rgba(239,68,68,0.65)",
+            textColor: "rgba(255,255,255,0.92)",
+            extendedProps: { dateStr },
+          });
+        }
+        return events;
+      }
+
+      function renderCalendar() {
+        const calEl = document.getElementById("calendar");
+        if (!window.FullCalendar || !window.FullCalendar.Calendar) {
+          calEl.innerHTML = `
+            <div style="padding:14px;color:rgba(239,68,68,0.95);font-weight:700">
+              Calendar library failed to load (FullCalendar CDN unavailable).
+              Check internet/VPN/adblock and reload.
+            </div>
+          `;
+          return;
+        }
+        const events = buildEvents();
+
+        const dates = getFilteredEntries().map(([k]) => k).sort();
+        const initialDate = dates.length ? dates[0] : new Date().toISOString().slice(0, 10);
+
+        if (calendar) {
+          calendar.destroy();
+          calendar = null;
+        }
+
+        calendar = new FullCalendar.Calendar(calEl, {
+          initialView: "dayGridMonth",
+          initialDate,
+          height: "auto",
+          headerToolbar: {
+            left: "prev,next today",
+            center: "title",
+            right: "dayGridMonth,listMonth",
+          },
+          events,
+          eventClick: (info) => {
+            const dateStr = info.event.startStr;
+            openModal(dateStr);
+          },
+          dateClick: (info) => {
+            const d = daily.get(info.dateStr);
+            if (d && passDateRange(info.dateStr) && passFilter(d)) openModal(info.dateStr);
+          },
+          dayCellDidMount: (info) => {
+            const dateStr = info.date.toISOString().slice(0, 10);
+            const d = daily.get(dateStr);
+            if (!d || !passDateRange(dateStr) || !passFilter(d)) return;
+
+            const badge = document.createElement("div");
+            badge.className = `pnl-badge ${d.net >= 0 ? "pos" : "neg"}`;
+            badge.textContent = formatDayValue(d);
+            badge.title = `${dateStr} — ${fmtMoney(d.net)} / ${fmtPct(d.netPct)} (${d.trades.length} closes)`;
+
+            const dayWins = d.trades.filter((t) => t.gainNum > 0).length;
+            const dayWinPct = d.trades.length ? ((dayWins / d.trades.length) * 100).toFixed(0) : 0;
+
+            const sub = document.createElement("div");
+            sub.className = "pnl-sub";
+            sub.innerHTML = `${d.trades.length} closes · <span style="color:${Number(dayWinPct) >= 50 ? 'var(--green)' : 'var(--red)'}; font-weight:700">${dayWinPct}% win</span>`;
+
+            const frame = info.el.querySelector(".fc-daygrid-day-frame");
+            if (frame) {
+              // append into the day cell content area
+              frame.appendChild(badge);
+              frame.appendChild(sub);
+            }
+          },
+        });
+
+        calendar.render();
+      }
+
+      function updateSubhead() {
+        const filteredDays = getFilteredEntries().length;
+        const filterLabel =
+          filterMode === "wins"
+            ? "wins only"
+            : filterMode === "losses"
+              ? "losses only"
+              : filterMode === "capped"
+                ? "capped only"
+                : "all days";
+        const viewLabel = displayMode === "percent" ? "% view" : "$ view";
+        const pnlLabel = pnlMode === "stop50" ? "hard stop -50%" : "actual";
+        const dateLabel = (dateFrom || dateTo) ? ` • ${dateFrom || "start"}→${dateTo || "end"}` : "";
+        document.getElementById("subhead").textContent = `${sourceLabel} • ${filteredDays} trading day${filteredDays === 1 ? "" : "s"} • ${filterLabel} • ${viewLabel} • ${pnlLabel}${dateLabel}`;
+      }
+
+      async function loadAndRender(csvText) {
+        document.getElementById("subhead").textContent = "Parsing CSV…";
+        if (!window.Papa || !window.Papa.parse) {
+          document.getElementById("subhead").textContent =
+            "CSV parser failed to load (PapaParse CDN unavailable).";
+          const calEl = document.getElementById("calendar");
+          calEl.innerHTML = `
+            <div style="padding:14px;color:rgba(239,68,68,0.95);font-weight:700">
+              CSV parser failed to load (PapaParse CDN unavailable).
+              Check internet/VPN/adblock and reload.
+            </div>
+          `;
+          return;
+        }
+
+        const parsed = Papa.parse(csvText, {
+          header: true,
+          skipEmptyLines: true,
+        });
+
+        if (parsed.errors && parsed.errors.length) {
+          console.warn(parsed.errors);
+        }
+
+        // Expect: close_date, instrument, quantity, total_cost, proceeds, gain
+        const rows = (parsed.data || []).filter((r) => r && r.close_date);
+        buildDailyFromRows(rows);
+        setStats();
+        renderCalendar();
+        renderMonthlyDistribution();
+        updateSubhead();
+      }
+
+      async function reload() {
+        try {
+          document.getElementById("subhead").textContent = "Loading…";
+          const file = document.getElementById("csvFile").files?.[0];
+          let csvText = "";
+
+          if (file) {
+            sourceLabel = file.name;
+            csvText = await loadCsvFromFile(file);
+          } else {
+            csvText = await loadDefaultCsv();
+          }
+
+          await loadAndRender(csvText);
+        } catch (e) {
+          console.error(e);
+          document.getElementById("subhead").textContent =
+            "Failed to load CSV. Start a local server and retry.";
+          alert(
+            `Could not load CSV. If you're opening via file://, use a local server.\n\nError: ${e?.message || e}`
+          );
+        }
+      }
+
+      function applyDateRange() {
+        dateFrom = document.getElementById("dateFrom").value || "";
+        dateTo = document.getElementById("dateTo").value || "";
+        setStats();
+        renderCalendar();
+        renderMonthlyDistribution();
+        updateSubhead();
+      }
+
+      document.getElementById("btnReload")?.addEventListener("click", reload);
+      document.getElementById("csvFile")?.addEventListener("change", reload);
+      document.getElementById("dateFrom")?.addEventListener("change", applyDateRange);
+      document.getElementById("dateTo")?.addEventListener("change", applyDateRange);
+      document.getElementById("btnClearDates")?.addEventListener("click", () => {
+        document.getElementById("dateFrom").value = "";
+        document.getElementById("dateTo").value = "";
+        applyDateRange();
+      });
+      document.getElementById("filterMode")?.addEventListener("change", (e) => {
+        filterMode = e.target.value;
+        setStats();
+        renderCalendar();
+        renderMonthlyDistribution();
+        updateSubhead();
+      });
+      document.getElementById("displayMode")?.addEventListener("change", (e) => {
+        displayMode = e.target.value;
+        setStats();
+        renderCalendar();
+        updateSubhead();
+      });
+      document.getElementById("pnlMode")?.addEventListener("change", (e) => {
+        pnlMode = e.target.value;
+        recomputeDailyFromRawRows();
+        setStats();
+        renderCalendar();
+        renderMonthlyDistribution();
+        updateSubhead();
+      });
+
+      // Initial render
+      reload();
+    </script>
+  </body>
+</html>
+
