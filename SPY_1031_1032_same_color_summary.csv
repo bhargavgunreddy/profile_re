@@ -1,0 +1,4 @@
+ticker,window_days,trading_days_analyzed,same_color,same_color_pct,both_green,both_red,opposite_colors,had_doji
+SPY,30,30,13,43.33,8,5,16,1
+SPY,60,60,31,51.67,17,14,28,1
+SPY,90,90,47,52.22,28,19,41,2
