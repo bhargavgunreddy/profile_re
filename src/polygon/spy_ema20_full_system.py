@@ -18,9 +18,9 @@ def cache_path(ticker, year, month):
 
 
 # ================= CONFIG =================
-POLYGON_API_KEY = os.getenv("POLYGON_API_KEY")
-if not POLYGON_API_KEY:
-    raise RuntimeError("Set POLYGON_API_KEY env var")
+from polygon_secrets import get_polygon_api_key
+
+POLYGON_API_KEY = get_polygon_api_key()
 
 TICKER = "SPY"
 MULTIPLIER = 5

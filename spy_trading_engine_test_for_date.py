@@ -6,6 +6,13 @@ import pytz
 from datetime import timedelta, datetime
 import os
 import requests
+from pathlib import Path
+
+import sys
+
+# allow importing helpers from src/polygon when running from repo root
+sys.path.append(str(Path(__file__).resolve().parent / "src" / "polygon"))
+from polygon_secrets import get_polygon_api_key
 try:
     from dateutil.relativedelta import relativedelta
 except ImportError:
@@ -33,7 +40,7 @@ EASTERN = pytz.timezone("US/Eastern")
 
 # Polygon.io API key (optional - get free key at https://polygon.io)
 # Set as environment variable: export POLYGON_API_KEY="your_key_here"
-POLYGON_API_KEY = os.getenv("POLYGON_API_KEY", None)
+POLYGON_API_KEY = get_polygon_api_key(required=False)
 
 # Reversal probability table (updated from 501 trading days of historical data)
 REVERSAL_TABLE = {

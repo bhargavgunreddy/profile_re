@@ -10,9 +10,9 @@ from datetime import datetime, timedelta, timezone
 # ----------------------------
 # CONFIG
 # ----------------------------
-POLYGON_API_KEY = os.getenv("POLYGON_API_KEY", "").strip()
-if not POLYGON_API_KEY:
-    raise RuntimeError("Set env var POLYGON_API_KEY with your Polygon API key.")
+from polygon_secrets import get_polygon_api_key
+
+POLYGON_API_KEY = get_polygon_api_key()
 
 TICKER = "SPY"
 MULTIPLIER = 5

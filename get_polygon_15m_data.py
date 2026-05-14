@@ -12,9 +12,15 @@ import requests
 import pandas as pd
 import pytz
 from datetime import datetime, timedelta
+from pathlib import Path
+import sys
+
+# allow importing helpers from src/polygon when running from repo root
+sys.path.append(str(Path(__file__).resolve().parent / "src" / "polygon"))
+from polygon_secrets import get_polygon_api_key
 
 # Configuration
-API_KEY = os.getenv("POLYGON_API_KEY", "YOUR_API_KEY_HERE")
+API_KEY = get_polygon_api_key()
 SYMBOL = "SPY"  # Ticker symbol
 EASTERN = pytz.timezone("US/Eastern")
 
