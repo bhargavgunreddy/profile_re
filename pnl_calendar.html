@@ -159,7 +159,7 @@
 
       .stats {
         display: grid;
-        grid-template-columns: repeat(5, minmax(0, 1fr));
+        grid-template-columns: repeat(6, minmax(0, 1fr));
         gap: 10px;
       }
 
@@ -544,6 +544,10 @@
             <div class="k">Worst day</div>
             <div class="v" id="statWorst">--</div>
           </div>
+          <div class="card">
+            <div class="k">Total Commissions</div>
+            <div class="v" id="statComm">--</div>
+          </div>
         </div>
 
         <section class="panel">
@@ -827,10 +831,11 @@
               r.close_time || r.exit_time || r.close_timestamp || ""
             );
 
-          const entry = daily.get(dateStr) || { net: 0, costSum: 0, netPct: 0, trades: [] };
+          const entry = daily.get(dateStr) || { net: 0, costSum: 0, netPct: 0, commSum: 0, trades: [] };
           entry.net += gainNum;
           entry.costSum += costNum;
           const commNum = parseNum(r.commission);
+          entry.commSum += commNum;
 
           entry.trades.push({
             instrument: r.instrument || "",
@@ -960,6 +965,11 @@
         const statWorst = document.getElementById("statWorst");
         statWorst.textContent = fmtMoney(worst);
         statWorst.className = `v ${worst >= 0 ? "pos" : "neg"}`;
+
+        const totalComm = entries.reduce((a, [, d]) => a + d.commSum, 0);
+        const statComm = document.getElementById("statComm");
+        statComm.textContent = `$${totalComm.toFixed(2)}`;
+        statComm.className = "v neg";
       }
 
       function buildEvents() {

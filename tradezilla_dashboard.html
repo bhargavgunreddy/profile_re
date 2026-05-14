@@ -67,6 +67,12 @@
       table { width: 100%; border-collapse: collapse; }
       th, td { font-size: 12px; padding: 7px 8px; border-bottom: 1px solid rgba(255,255,255,0.08); }
       th { text-align: left; color: var(--muted); }
+      th.sortable { cursor: pointer; user-select: none; white-space: nowrap; }
+      th.sortable:hover { color: var(--text); }
+      th.sortable .arrow { font-size: 10px; margin-left: 3px; opacity: 0.35; }
+      th.sortable.asc .arrow::after { content: "\25B2"; }
+      th.sortable.desc .arrow::after { content: "\25BC"; }
+      th.sortable:not(.asc):not(.desc) .arrow::after { content: "\25B4"; }
       td.num { text-align: right; font-variant-numeric: tabular-nums; }
       .matrix {
         display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px;
@@ -134,6 +140,21 @@
           <h3>Hold Time P/L <span style="font-size:12px;color:var(--muted)">(click bar to see trades)</span></h3>
           <div class="chartWrap" style="height:280px"><canvas id="holdChart"></canvas></div>
           <div id="holdTrades" style="max-height:260px;overflow-y:auto;margin-top:8px;display:none"></div>
+        </div>
+      </div>
+
+      <div class="grid2">
+        <div class="section">
+          <h3>P/L by Contract Count <span style="font-size:12px;color:var(--muted)">(click bar to see trades)</span></h3>
+          <div class="chartWrap" style="height:280px"><canvas id="qtyChart"></canvas></div>
+          <div id="qtyTrades" style="max-height:260px;overflow-y:auto;margin-top:8px;display:none"></div>
+        </div>
+        <div class="section">
+          <h3>Contract Count Breakdown</h3>
+          <table>
+            <thead><tr><th>Size</th><th class="num">Trades</th><th class="num">Win%</th><th class="num">Total P/L</th><th class="num">Avg P/L</th></tr></thead>
+            <tbody id="qtyTable"></tbody>
+          </table>
         </div>
       </div>
 
@@ -297,6 +318,15 @@
             (t) => bucketForHold(Number(t.hold_minutes || 0))
           );
         }
+
+        // Contract Count chart
+        const qb = data.qty_buckets || [];
+        if (qb.length) {
+          charts.qty = renderClickableBarChart(
+            "qtyChart", "qtyTrades", qb, allTrades,
+            (t) => bucketForQty(t.quantity)
+          );
+        }
       }
 
       // --- Time bucket helpers ---
@@ -306,8 +336,21 @@
         {label:"11:30-13:00", lo:"11:30", hi:"13:00"},
         {label:"13:00-14:30", lo:"13:00", hi:"14:30"},
         {label:"14:30-15:45", lo:"14:30", hi:"15:45"},
-        {label:"15:45-16:00", lo:"15:45", hi:"16:00"},
+        {label:"15:45-16:00", lo:"15:45", hi:"16:01"},
       ];
+      const QTY_BUCKETS = [
+        {label:"1 ct", lo:1, hi:1},
+        {label:"2 ct", lo:2, hi:2},
+        {label:"3-5 ct", lo:3, hi:5},
+        {label:"10 ct", lo:10, hi:10},
+      ];
+
+      function bucketForQty(qty) {
+        const qi = Math.floor(Number(qty || 0));
+        for (const b of QTY_BUCKETS) { if (qi >= b.lo && qi <= b.hi) return b.label; }
+        return "Other";
+      }
+
       const HOLD_BUCKETS = [
         {label:"0-2 min", lo:0, hi:2},
         {label:"2-5 min", lo:2, hi:5},
@@ -328,12 +371,40 @@
         return null;
       }
 
+      const TRADE_COLS = [
+        { key: "date",     label: "Date",       cls: "",    val: t => t.date || "" },
+        { key: "time",     label: "Time",       cls: "",    val: t => t.close_time || "" },
+        { key: "inst",     label: "Instrument", cls: "",    val: t => t.instrument || "" },
+        { key: "qty",      label: "Qty",        cls: "num", val: t => Number(t.quantity || 0) },
+        { key: "cost",     label: "Cost",       cls: "num", val: t => Number(t.cost || 0) },
+        { key: "pnl",      label: "P/L",        cls: "num", val: t => Number(t.gain || 0) },
+        { key: "hold",     label: "Hold",       cls: "num", val: t => Number(t.hold_minutes || 0) },
+      ];
+
+      const _tradeTableState = {};
+
       function renderTradeTable(containerId, trades) {
         const el = q(containerId);
         if (!trades.length) { el.style.display = "none"; return; }
         el.style.display = "block";
-        const hdr = `<table><thead><tr><th>Date</th><th>Time</th><th>Instrument</th><th>Qty</th><th class="num">Cost</th><th class="num">P/L</th><th class="num">Hold</th></tr></thead><tbody>`;
-        const rows = trades.map(t => {
+
+        const st = _tradeTableState[containerId] || { col: "date", dir: "desc" };
+        _tradeTableState[containerId] = st;
+
+        const colDef = TRADE_COLS.find(c => c.key === st.col) || TRADE_COLS[0];
+        const sorted = [...trades].sort((a, b) => {
+          let va = colDef.val(a), vb = colDef.val(b);
+          if (typeof va === "string") { const cmp = va.localeCompare(vb); return st.dir === "asc" ? cmp : -cmp; }
+          return st.dir === "asc" ? va - vb : vb - va;
+        });
+
+        const ths = TRADE_COLS.map(c => {
+          const active = c.key === st.col;
+          const cls = `sortable ${c.cls ? c.cls : ""} ${active ? st.dir : ""}`.trim();
+          return `<th class="${cls}" data-sort="${c.key}">${c.label}<span class="arrow"></span></th>`;
+        }).join("");
+
+        const rows = sorted.map(t => {
           const g = Number(t.gain);
           const hm = t.hold_minutes ? `${Number(t.hold_minutes).toFixed(0)}m` : "--";
           return `<tr>
@@ -346,7 +417,17 @@
             <td class="num">${hm}</td>
           </tr>`;
         }).join("");
-        el.innerHTML = hdr + rows + `</tbody></table>`;
+
+        el.innerHTML = `<table><thead><tr>${ths}</tr></thead><tbody>${rows}</tbody></table>`;
+
+        el.querySelectorAll("th.sortable").forEach(th => {
+          th.addEventListener("click", () => {
+            const key = th.dataset.sort;
+            if (st.col === key) { st.dir = st.dir === "asc" ? "desc" : "asc"; }
+            else { st.col = key; st.dir = key === "date" || key === "time" ? "desc" : "asc"; }
+            renderTradeTable(containerId, trades);
+          });
+        });
       }
 
       function renderClickableBarChart(canvasId, tradesContainerId, bucketRows, allTrades, matchFn) {
@@ -390,6 +471,20 @@
         return chart;
       }
 
+      function renderQtyTable(rows) {
+        q("qtyTable").innerHTML = rows.map(r => {
+          const pnl = Number(r.pnl);
+          const avg = Number(r.avg_pnl || 0);
+          return `<tr>
+            <td><strong>${r.label}</strong></td>
+            <td class="num">${r.trades}</td>
+            <td class="num">${Number(r.win_rate).toFixed(1)}%</td>
+            <td class="num ${clsBySign(pnl)}">${fmtMoney(pnl)}</td>
+            <td class="num ${clsBySign(avg)}">${fmtMoney(avg)}</td>
+          </tr>`;
+        }).join("");
+      }
+
       function renderDashboard(data) {
         const k = data.kpis || {};
         setVal("kTrades", `${k.trades ?? 0}`);
@@ -403,6 +498,7 @@
         q("meta").textContent = `Source: ${data.source_csv || "n/a"} | Generated: ${data.generated_at || "n/a"}`;
         renderCharts(data);
         renderMatrix(data);
+        renderQtyTable(data.qty_buckets || []);
         renderTopTable("winsTbl", data.biggest_wins || []);
         renderTopTable("lossTbl", data.biggest_losses || []);
       }

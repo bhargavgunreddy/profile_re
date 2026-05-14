@@ -57,7 +57,7 @@ def parse_fill(fill: str) -> tuple[int, float] | None:
 
 def parse_desc(desc: str) -> dict | None:
     pat = re.compile(
-        r"^(Buy|Sell)\s+(\d+)\s+([A-Za-z]{3})-(\d{2})-(\d{2})\s+(\d+)\s+(Call|Put)s?\s+@\s+([0-9.]+)\s+.*?\bto\s+(Open|Close)\b",
+        r"^(Buy|Sell)\s+(\d+)\s+([A-Za-z]{3})-(\d{2})-(\d{2})\s+(\d+)\s+(Call|Put)s?\s+@\s+([0-9.]+|Market)\s+.*?\bto\s+(Open|Close)\b",
         re.IGNORECASE,
     )
     m = pat.search((desc or "").strip())
@@ -75,7 +75,7 @@ def parse_desc(desc: str) -> dict | None:
         "strike": float(strike),
         "cp": cp.upper(),
         "oc": oc.title(),
-        "px_desc": float(px),
+        "px_desc": 0.0 if px.upper() == "MARKET" else float(px),
     }
 
 

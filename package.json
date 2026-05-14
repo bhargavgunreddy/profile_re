@@ -27,6 +27,7 @@
     "pnl:serve": "python3 scripts/serve_pnl_calendar.py",
     "orders:refresh": "bash scripts/refresh_orders_dashboard.sh --no-serve",
     "orders:live": "bash scripts/refresh_orders_dashboard.sh",
+    "orders:merge": "bash scripts/merge_daily_orders.sh",
     "heroku:deploy": "git push heroku master"
   },
   "eslintConfig": {

@@ -1,0 +1,57 @@
+---
+description: Trading analysis context — always loaded so the agent knows the trader's profile, rules, and data pipeline
+alwaysApply: true
+---
+
+# Trading Context
+
+## Who is the trader
+
+- Day-trades SPX 0DTE options (calls and puts) on E*TRADE
+- Account under $25K (PDT restriction lifts June 1, 2026)
+- Trading since Jan 2026, 319+ trades logged
+- Scalper style: best edge is sub-5-minute trades (81.4% win rate, +$8,292)
+
+## Core stats (as of May 14, 2026)
+
+- Actual P/L: -$5,400 across 319 trades
+- Simulated (sub-5-min + -50% stop cap): +$8,457 — a $13,857 discipline gap
+- Win rate: 61.8% overall, 82.6% on sub-2-min holds
+- Avg win: +$75, Avg loss: -$165
+- Green weeks: 10/19 actual (53%), 16/17 simulated (94%)
+
+## The playbook (`TRADING_PLAYBOOK.md`)
+
+Read this file for the full system. Key rules:
+- OT-OCO on every trade (entry triggers +30% target / -50% stop)
+- Max 1 contract on SPX until 2 consecutive green weeks
+- 1-3 min time stop, 5 min absolute max hold
+- Never cancel OCO to go manual — use Modify
+- Qty check: entry = profit leg = stop leg
+- Avoid 10:00-11:30 AM window
+- Re-entry Runner for bigger moves (Section 5 of playbook)
+- June 1+: 5 trades/day cap, -$300 daily loss limit
+
+## Key data files
+
+- `Orders.csv` — raw Schwab/E*TRADE order export (newest on top)
+- `gainsandlosses_enriched.csv` — reconstructed trades with P/L (built by pipeline)
+- `trade_dashboard_data.json` — analytics JSON for tradezilla dashboard
+- `TRADING_PLAYBOOK.md` — full rules and analysis
+- `SPY_1m_data/OrdersMay7-14.csv` — recent week's raw orders
+
+## Dashboard pipeline
+
+See `.cursor/rules/orders-dashboard-refresh.mdc` for the build steps. Short version:
+1. `python3 src/polygon/build_gains_from_orders.py` — Orders.csv → gainsandlosses_enriched.csv
+2. `python3 src/polygon/build_trade_dashboard_data.py` — enriched CSV → trade_dashboard_data.json
+3. `python3 scripts/serve_pnl_calendar.py` — serves pnl_calendar.html + tradezilla_dashboard.html
+4. Shortcut: `npm run orders:live` (rebuild + serve) or `npm run orders:refresh` (rebuild only)
+
+## Compliance review pattern
+
+When asked to critique or review trades:
+1. Read `TRADING_PLAYBOOK.md` for the rules
+2. Read the orders file (Orders.csv or a specific date range CSV)
+3. Check each trade against: OT-OCO usage, position size, hold time, stop width, time window, reversal count
+4. Present as a Canvas with day-by-day breakdown and rule grades

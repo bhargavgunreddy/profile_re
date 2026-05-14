@@ -225,7 +225,7 @@ def main() -> None:
         ("11:30-13:00", "11:30", "13:00"),
         ("13:00-14:30", "13:00", "14:30"),
         ("14:30-15:45", "14:30", "15:45"),
-        ("15:45-16:00", "15:45", "16:00"),
+        ("15:45-16:00", "15:45", "16:01"),
     ]
     time_of_day = {b[0]: {"pnl": 0.0, "trades": 0, "wins": 0} for b in time_buckets}
 
@@ -278,6 +278,38 @@ def main() -> None:
         wr = (v["wins"] / v["trades"] * 100.0) if v["trades"] else 0.0
         hold_time_rows.append({"label": label, "pnl": v["pnl"], "trades": v["trades"], "win_rate": wr})
 
+    # Contract-count buckets
+    qty_bucket_defs = [
+        ("1 ct", 1, 1),
+        ("2 ct", 2, 2),
+        ("3-5 ct", 3, 5),
+        ("10 ct", 10, 10),
+        ("Other", -1, -1),
+    ]
+    qty_data: dict[str, dict] = {b[0]: {"pnl": 0.0, "trades": 0, "wins": 0} for b in qty_bucket_defs}
+
+    def _qty_bucket(q: float) -> str:
+        qi = int(q)
+        for label, lo, hi in qty_bucket_defs:
+            if lo <= qi <= hi:
+                return label
+        return "Other"
+
+    for t in trades:
+        b = _qty_bucket(t.get("quantity", 0))
+        qty_data[b]["pnl"] += t["gain"]
+        qty_data[b]["trades"] += 1
+        qty_data[b]["wins"] += t["win"]
+
+    qty_rows = []
+    for label, _, _ in qty_bucket_defs:
+        v = qty_data[label]
+        if v["trades"] == 0:
+            continue
+        wr = (v["wins"] / v["trades"] * 100.0) if v["trades"] else 0.0
+        avg = (v["pnl"] / v["trades"]) if v["trades"] else 0.0
+        qty_rows.append({"label": label, "pnl": v["pnl"], "trades": v["trades"], "win_rate": wr, "avg_pnl": avg})
+
     # Biggest wins/losses
     biggest_wins = sorted(trades, key=lambda x: x["gain"], reverse=True)[:10]
     biggest_losses = sorted(trades, key=lambda x: x["gain"])[:10]
@@ -300,6 +332,7 @@ def main() -> None:
         "market_trade_matrix": matrix,
         "time_of_day": time_of_day_rows,
         "hold_time": hold_time_rows,
+        "qty_buckets": qty_rows,
         "biggest_wins": biggest_wins,
         "biggest_losses": biggest_losses,
         "trades": trades,
