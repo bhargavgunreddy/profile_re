@@ -25,6 +25,7 @@ from datetime import date, timedelta
 from pathlib import Path
 
 import pandas as pd
+import numpy as np
 import requests
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -185,6 +186,105 @@ def get_spy_at_931(spy_df: pd.DataFrame, trade_date: date) -> float | None:
     if mask.any():
         return float(day_data.loc[day_data.index[mask][0], "Close"])
     return None
+
+
+def _spy_window(spy_df: pd.DataFrame, trade_date: date, start_h: int, start_m: int,
+                end_h: int, end_m: int) -> pd.DataFrame:
+    day_data = spy_df[spy_df.index.date == trade_date]
+    if day_data.empty:
+        return day_data
+    base = day_data.index[0].normalize()
+    start = base + pd.Timedelta(hours=start_h, minutes=start_m)
+    end = base + pd.Timedelta(hours=end_h, minutes=end_m)
+    return day_data[(day_data.index >= start) & (day_data.index <= end)]
+
+
+def classify_day_regime_1030(spy_df: pd.DataFrame, trade_date: date) -> dict:
+    """
+    Classify RANGE vs TREND using SPY 1m bars from 9:31 → 10:30 only.
+
+    Mirrors the repo's regime logic (VWAP slope, time on one side of VWAP,
+    opening-range expansion) but on 1-minute SPY data × 10 as SPX proxy.
+
+    Returns Day_Type_1030: RANGE | TREND_UP | TREND_DOWN
+    """
+    empty = {
+        "Day_Type_1030": None,
+        "SPX_Move_1030": None,
+        "SPX_Range_1030": None,
+        "Trend_Efficiency_1030": None,
+        "Trend_Score_1030": None,
+    }
+
+    open_931 = get_spy_at_931(spy_df, trade_date)
+    window = _spy_window(spy_df, trade_date, 9, 31, 10, 30)
+    if open_931 is None or window.empty:
+        return empty
+
+    close_1030 = price_checkpoint(window, 10, 30, tol_min=5)
+    if close_1030 is None:
+        close_1030 = float(window.iloc[-1]["Close"])
+
+    or_window = _spy_window(spy_df, trade_date, 9, 31, 10, 0)
+    reg_window = window
+
+    or_high = float(or_window["High"].max()) if not or_window.empty else float(reg_window["High"].max())
+    or_low = float(or_window["Low"].min()) if not or_window.empty else float(reg_window["Low"].min())
+    or_range = max(or_high - or_low, 1e-9)
+
+    reg_high = float(reg_window["High"].max())
+    reg_low = float(reg_window["Low"].min())
+    reg_range = max(reg_high - reg_low, 1e-9)
+
+    spx_move = (close_1030 - open_931) * 10
+    spx_range = reg_range * 10
+    efficiency = abs(spx_move) / spx_range if spx_range > 0 else 0.0
+
+    # Session VWAP over 9:31-10:30
+    tp = (reg_window["High"] + reg_window["Low"] + reg_window["Close"]) / 3.0
+    vol = reg_window["Volume"].replace(0, np.nan)
+    if vol.notna().any() and float(vol.sum()) > 0:
+        vwap = (tp * vol).cumsum() / vol.cumsum()
+        v0, vN = float(vwap.iloc[0]), float(vwap.iloc[-1])
+        vwap_slope = (vN - v0) / max(abs(v0), 1e-9)
+        time_above = float((reg_window["Close"] > vwap).mean())
+    else:
+        vwap_slope = (close_1030 - open_931) / max(abs(open_931), 1e-9)
+        time_above = 1.0 if close_1030 >= open_931 else 0.0
+
+    # 14-day SPY ATR proxy from prior closes (fallback: OR range)
+    prior = spy_df[spy_df.index.date < trade_date].copy()
+    daily = prior.resample("D")["Close"].last().dropna().tail(14)
+    atr = float(daily.diff().abs().mean()) if len(daily) >= 5 else or_range
+    atr = max(atr, 1e-9)
+
+    or_atr_frac = or_range / atr
+    range_expansion = reg_range / atr
+    direction = 1 if spx_move >= 0 else -1
+
+    # Scoring (adapted from SPY_15m_data/spy_full.py thresholds)
+    or_gate = 1.0 if or_atr_frac >= 0.22 else 0.0
+    slope_score = np.clip((abs(vwap_slope) - 0.00055) / 0.00055, -2, 2)
+    vwap_side_score = np.clip((abs(time_above - 0.5) - 0.12) / 0.12, -2, 2)
+    exp_score = np.clip((range_expansion - 1.15) / 1.15, -2, 2)
+    move_score = np.clip((abs(spx_move) - 12.0) / 12.0, -2, 2)
+    eff_score = np.clip((efficiency - 0.45) / 0.45, -2, 2)
+
+    score = float(or_gate * (0.7 * slope_score + 0.7 * vwap_side_score + 0.6 * exp_score
+                             + 0.8 * move_score + 0.5 * eff_score))
+
+    if score >= 1.0 and abs(spx_move) >= 10:
+        day_type = "TREND_UP" if direction > 0 else "TREND_DOWN"
+    else:
+        day_type = "RANGE"
+
+    return {
+        "Day_Type_1030": day_type,
+        "SPX_Move_1030": round(spx_move, 1),
+        "SPX_Range_1030": round(spx_range, 1),
+        "Trend_Efficiency_1030": round(efficiency, 2),
+        "Trend_Score_1030": round(score, 2),
+    }
 
 
 # ── Step 2: SPXW option 1m ────────────────────────────────────────────
@@ -377,6 +477,8 @@ def run_analysis(start: date, end: date, strike_interval: int = 10) -> pd.DataFr
         pnl_330, pct_330 = straddle_pnl(cost, val_330)
         pnl_350, pct_350 = straddle_pnl(cost, val_350)
 
+        regime = classify_day_regime_1030(spy_df, d)
+
         print(
             f"  Call {option_ticker(d, strike, 'C')}: "
             f"9:31=${ce}  10:00=${c10}  12:00=${cm}  3:30=${c330}  3:50=${c350}"
@@ -414,6 +516,7 @@ def run_analysis(start: date, end: date, strike_interval: int = 10) -> pd.DataFr
             "Straddle_350": val_350,
             "Combined_PnL_350": pnl_350,
             "Combined_PnL_350_%": pct_350,
+            **regime,
         })
 
     print(f"\nOption legs: {cache_hits} cache hits, {downloads} downloads")
@@ -490,7 +593,7 @@ def print_summary(df: pd.DataFrame) -> None:
         return
 
     show = [
-        "SPX_931", "Date", "Day", "Strike", "Straddle_Cost",
+        "SPX_931", "Date", "Day", "Day_Type_1030", "SPX_Move_1030", "Strike", "Straddle_Cost",
         "Combined_PnL_10am", "Combined_PnL_12pm", "Combined_PnL_330", "Combined_PnL_350",
     ]
     display_df = df[[c for c in show if c in df.columns]]
