@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>SPX 0DTE Strangles — Last 20 Days</title>
+<style>
+  @page { margin: 0.55in; size: letter; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    color: #1a1a1a; font-size: 11px; line-height: 1.4; margin: 0; padding: 24px;
+    background: #fff;
+  }
+  h1 { font-size: 22px; font-weight: 600; margin: 0 0 6px; }
+  .sub { color: #555; margin-bottom: 20px; max-width: 720px; }
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 14px; }
+  .stat {
+    border: 1px solid #ddd; border-radius: 6px; padding: 10px 12px; background: #fafafa;
+  }
+  .stat .val { font-size: 16px; font-weight: 600; margin-bottom: 2px; }
+  .stat .lbl { color: #666; font-size: 10px; }
+  .callout {
+    border-left: 3px solid #2563eb; background: #f0f6ff; padding: 10px 12px;
+    margin: 16px 0 20px; color: #333;
+  }
+  h2 { font-size: 14px; font-weight: 600; margin: 22px 0 6px; border-bottom: 1px solid #eee; padding-bottom: 4px; }
+  .cap { color: #777; font-size: 10px; margin-bottom: 8px; }
+  table { width: 100%; border-collapse: collapse; margin-bottom: 8px; }
+  th, td { border-bottom: 1px solid #eee; padding: 5px 6px; text-align: left; }
+  th { font-size: 10px; color: #666; font-weight: 600; background: #f5f5f5; }
+  tr:nth-child(even) td { background: #fcfcfc; }
+  tr.total td { border-top: 2px solid #ccc; background: #f5f5f5; }
+  .num { text-align: right; font-variant-numeric: tabular-nums; }
+  .center { text-align: center; }
+  .pos { color: #15803d; }
+  .neg { color: #b91c1c; }
+  .page-break { page-break-before: always; }
+  footer { margin-top: 24px; color: #888; font-size: 9px; }
+</style>
+</head>
+<body>
+  <h1>SPX 0DTE Strangles — Last 20 Days</h1>
+  <p class="sub">Entry 9:31 AM ET · SPX = SPY × 10 · Buy 1 call + 1 put · $100 multiplier · May 8 – Jun 4, 2026 (19 sessions) · Source: Polygon SPXW 1m bars</p>
+
+  <div class="stats">
+    <div class="stat"><div class="val">±$10</div><div class="lbl">Call ATM+10 / Put ATM−10</div></div>
+    <div class="stat"><div class="val">$+5,150</div><div class="lbl">±10 · 12:00 PM total</div></div>
+    <div class="stat"><div class="val">$+7,651</div><div class="lbl">±10 · 3:30 PM total</div></div>
+    <div class="stat"><div class="val">9/19</div><div class="lbl">±10 · 3:30 PM win days</div></div>
+  </div>
+  <div class="stats">
+    <div class="stat"><div class="val">±$20</div><div class="lbl">Call ATM+20 / Put ATM−20</div></div>
+    <div class="stat"><div class="val">$+4,538</div><div class="lbl">±20 · 12:00 PM total</div></div>
+    <div class="stat"><div class="val">$+6,035</div><div class="lbl">±20 · 3:30 PM total</div></div>
+    <div class="stat"><div class="val">8/19</div><div class="lbl">±20 · 3:30 PM win days</div></div>
+  </div>
+
+  <div class="callout">Wider wings (±$20) cost ~26% less to enter ($20.40 vs $27.86 avg) but capture less on big trend days. ±$10 outperformed at both checkpoints over this window.</div>
+
+  <h2>±$10 Strangle — 12:00 PM &amp; 3:30 PM P/L</h2>
+  <p class="cap">Avg entry cost $27.86/contract</p>
+  <table>
+    <thead><tr><th>Date</th><th>Day</th><th>ATM</th><th>C/P Strikes</th><th>Cost</th><th>12:00 PM</th><th>3:30 PM</th></tr></thead>
+    <tbody><tr><td>05-08</td><td>Fri</td><td class='num'>7,350</td><td class='center'>7360/7340</td><td class='num'>$27.65</td><td class='num pos'>$+915</td><td class='num pos'>$+264</td></tr>
+<tr><td>05-11</td><td>Mon</td><td class='num'>7,370</td><td class='center'>7380/7360</td><td class='num'>$27.40</td><td class='num pos'>$+1,815</td><td class='num neg'>$-153</td></tr>
+<tr><td>05-12</td><td>Tue</td><td class='num'>7,360</td><td class='center'>7370/7350</td><td class='num'>$28.10</td><td class='num neg'>$-1,337</td><td class='num neg'>$-243</td></tr>
+<tr><td>05-13</td><td>Wed</td><td class='num'>7,370</td><td class='center'>7380/7360</td><td class='num'>$27.70</td><td class='num pos'>$+1,340</td><td class='num pos'>$+4,628</td></tr>
+<tr><td>05-14</td><td>Thu</td><td class='num'>7,450</td><td class='center'>7460/7440</td><td class='num'>$26.50</td><td class='num pos'>$+2,980</td><td class='num pos'>$+1,755</td></tr>
+<tr><td>05-15</td><td>Fri</td><td class='num'>7,410</td><td class='center'>7420/7400</td><td class='num'>$34.80</td><td class='num neg'>$-1,345</td><td class='num neg'>$-2,673</td></tr>
+<tr><td>05-18</td><td>Mon</td><td class='num'>7,400</td><td class='center'>7410/7390</td><td class='num'>$28.10</td><td class='num neg'>$-634</td><td class='num neg'>$-1,001</td></tr>
+<tr><td>05-19</td><td>Tue</td><td class='num'>7,340</td><td class='center'>7350/7330</td><td class='num'>$36.20</td><td class='num neg'>$-1,655</td><td class='num neg'>$-2,120</td></tr>
+<tr><td>05-20</td><td>Wed</td><td class='num'>7,350</td><td class='center'>7360/7340</td><td class='num'>$31.29</td><td class='num pos'>$+3,209</td><td class='num pos'>$+3,319</td></tr>
+<tr><td>05-21</td><td>Thu</td><td class='num'>7,380</td><td class='center'>7390/7370</td><td class='num'>$38.20</td><td class='num neg'>$-660</td><td class='num pos'>$+1,668</td></tr>
+<tr><td>05-22</td><td>Fri</td><td class='num'>7,470</td><td class='center'>7480/7460</td><td class='num'>$32.10</td><td class='num neg'>$-1,050</td><td class='num neg'>$-2,760</td></tr>
+<tr><td>05-26</td><td>Tue</td><td class='num'>7,500</td><td class='center'>7510/7490</td><td class='num'>$24.94</td><td class='num neg'>$-943</td><td class='num neg'>$-1,829</td></tr>
+<tr><td>05-27</td><td>Wed</td><td class='num'>7,510</td><td class='center'>7520/7500</td><td class='num'>$24.40</td><td class='num neg'>$-1,151</td><td class='num neg'>$-1,901</td></tr>
+<tr><td>05-28</td><td>Thu</td><td class='num'>7,500</td><td class='center'>7510/7490</td><td class='num'>$24.40</td><td class='num pos'>$+2,230</td><td class='num pos'>$+3,065</td></tr>
+<tr><td>05-29</td><td>Fri</td><td class='num'>7,560</td><td class='center'>7570/7550</td><td class='num'>$24.17</td><td class='num neg'>$-410</td><td class='num neg'>$-740</td></tr>
+<tr><td>06-01</td><td>Mon</td><td class='num'>7,550</td><td class='center'>7560/7540</td><td class='num'>$28.60</td><td class='num pos'>$+158</td><td class='num pos'>$+2,490</td></tr>
+<tr><td>06-02</td><td>Tue</td><td class='num'>7,580</td><td class='center'>7590/7570</td><td class='num'>$19.46</td><td class='num pos'>$+690</td><td class='num pos'>$+111</td></tr>
+<tr><td>06-03</td><td>Wed</td><td class='num'>7,590</td><td class='center'>7600/7580</td><td class='num'>$18.57</td><td class='num neg'>$-339</td><td class='num neg'>$-284</td></tr>
+<tr><td>06-04</td><td>Thu</td><td class='num'>7,520</td><td class='center'>7530/7510</td><td class='num'>$26.70</td><td class='num pos'>$+1,337</td><td class='num pos'>$+4,055</td></tr>
+<tr class='total'><td colspan='5'><strong>GRAND TOTAL</strong></td><td class='num pos'><strong>$+5,150</strong></td><td class='num pos'><strong>$+7,651</strong></td></tr></tbody>
+  </table>
+
+  <h2>±$20 Strangle — 12:00 PM &amp; 3:30 PM P/L</h2>
+  <p class="cap">Avg entry cost $20.40/contract</p>
+  <table>
+    <thead><tr><th>Date</th><th>Day</th><th>ATM</th><th>C/P Strikes</th><th>Cost</th><th>12:00 PM</th><th>3:30 PM</th></tr></thead>
+    <tbody><tr><td>05-08</td><td>Fri</td><td class='num'>7,350</td><td class='center'>7370/7330</td><td class='num'>$19.68</td><td class='num pos'>$+789</td><td class='num pos'>$+87</td></tr>
+<tr><td>05-11</td><td>Mon</td><td class='num'>7,370</td><td class='center'>7390/7350</td><td class='num'>$19.60</td><td class='num pos'>$+1,573</td><td class='num neg'>$-223</td></tr>
+<tr><td>05-12</td><td>Tue</td><td class='num'>7,360</td><td class='center'>7380/7340</td><td class='num'>$21.00</td><td class='num neg'>$-1,170</td><td class='num neg'>$-516</td></tr>
+<tr><td>05-13</td><td>Wed</td><td class='num'>7,370</td><td class='center'>7390/7350</td><td class='num'>$19.90</td><td class='num pos'>$+1,285</td><td class='num pos'>$+4,315</td></tr>
+<tr><td>05-14</td><td>Thu</td><td class='num'>7,450</td><td class='center'>7470/7430</td><td class='num'>$18.65</td><td class='num pos'>$+2,780</td><td class='num pos'>$+1,500</td></tr>
+<tr><td>05-15</td><td>Fri</td><td class='num'>7,410</td><td class='center'>7430/7390</td><td class='num'>$26.90</td><td class='num neg'>$-1,250</td><td class='num neg'>$-2,420</td></tr>
+<tr><td>05-18</td><td>Mon</td><td class='num'>7,400</td><td class='center'>7420/7380</td><td class='num'>$20.80</td><td class='num neg'>$-555</td><td class='num neg'>$-1,095</td></tr>
+<tr><td>05-19</td><td>Tue</td><td class='num'>7,340</td><td class='center'>7360/7320</td><td class='num'>$28.02</td><td class='num neg'>$-1,482</td><td class='num neg'>$-2,075</td></tr>
+<tr><td>05-20</td><td>Wed</td><td class='num'>7,350</td><td class='center'>7370/7330</td><td class='num'>$23.50</td><td class='num pos'>$+2,948</td><td class='num pos'>$+3,425</td></tr>
+<tr><td>05-21</td><td>Thu</td><td class='num'>7,380</td><td class='center'>7400/7360</td><td class='num'>$30.20</td><td class='num neg'>$-680</td><td class='num pos'>$+1,388</td></tr>
+<tr><td>05-22</td><td>Fri</td><td class='num'>7,470</td><td class='center'>7490/7450</td><td class='num'>$24.20</td><td class='num neg'>$-1,010</td><td class='num neg'>$-2,280</td></tr>
+<tr><td>05-26</td><td>Tue</td><td class='num'>7,500</td><td class='center'>7520/7480</td><td class='num'>$17.72</td><td class='num neg'>$-822</td><td class='num neg'>$-1,590</td></tr>
+<tr><td>05-27</td><td>Wed</td><td class='num'>7,510</td><td class='center'>7530/7490</td><td class='num'>$17.20</td><td class='num neg'>$-975</td><td class='num neg'>$-1,618</td></tr>
+<tr><td>05-28</td><td>Thu</td><td class='num'>7,500</td><td class='center'>7520/7480</td><td class='num'>$16.00</td><td class='num pos'>$+2,314</td><td class='num pos'>$+2,933</td></tr>
+<tr><td>05-29</td><td>Fri</td><td class='num'>7,560</td><td class='center'>7580/7540</td><td class='num'>$16.85</td><td class='num neg'>$-425</td><td class='num neg'>$-830</td></tr>
+<tr><td>06-01</td><td>Mon</td><td class='num'>7,550</td><td class='center'>7570/7530</td><td class='num'>$23.86</td><td class='num neg'>$-264</td><td class='num pos'>$+1,960</td></tr>
+<tr><td>06-02</td><td>Tue</td><td class='num'>7,580</td><td class='center'>7600/7560</td><td class='num'>$12.82</td><td class='num pos'>$+464</td><td class='num neg'>$-220</td></tr>
+<tr><td>06-03</td><td>Wed</td><td class='num'>7,590</td><td class='center'>7610/7570</td><td class='num'>$11.82</td><td class='num neg'>$-297</td><td class='num neg'>$-509</td></tr>
+<tr><td>06-04</td><td>Thu</td><td class='num'>7,520</td><td class='center'>7540/7500</td><td class='num'>$18.90</td><td class='num pos'>$+1,315</td><td class='num pos'>$+3,803</td></tr>
+<tr class='total'><td colspan='5'><strong>GRAND TOTAL</strong></td><td class='num pos'><strong>$+4,538</strong></td><td class='num pos'><strong>$+6,035</strong></td></tr></tbody>
+  </table>
+
+  <footer>Generated from strangle_pm10_last_20d.csv and strangle_pm20_last_20d.csv · profile_re SPX straddle analysis branch</footer>
+</body>
+</html>
