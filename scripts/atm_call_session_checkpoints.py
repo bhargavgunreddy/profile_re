@@ -3,7 +3,8 @@
 
 For each underlying:
   - close of the 09:30-09:35 ET 5m candle
-  - nearest listed call, preferring 0DTE then this week then this month
+  - nearest listed call: 0DTE if listed, else this week's Friday, else
+    this month / next month — whichever chain actually prints at 12:30/3:30
   - option close on the 5m candle ending at 12:30 and 15:30 ET
     (falls back to 15m candle ending at those times, then the 5m bar starting then)
 """
@@ -160,29 +161,40 @@ def third_friday(year: int, month: int) -> date:
     return d + timedelta(days=14)
 
 
-def pick_expiration(exp_dates: list[date], session: date) -> tuple[date | None, str]:
+def next_third_friday(d: date) -> date:
+    m = third_friday(d.year, d.month)
+    if m >= d:
+        return m
+    month = d.month + 1
+    year = d.year
+    if month == 13:
+        month, year = 1, year + 1
+    return third_friday(year, month)
+
+
+def ranked_expirations(exp_dates: list[date], session: date) -> list[tuple[date, str]]:
+    """0DTE, then this week's Friday, then this month, then next month — listed only."""
     if not exp_dates:
-        return None, "none"
+        return []
+    listed = set(exp_dates)
     weekly = friday_of_week(session)
-    monthly = third_friday(session.year, session.month)
-    if monthly < session:
-        month = session.month + 1
-        year = session.year
-        if month == 13:
-            month, year = 1, year + 1
-        monthly = third_friday(year, month)
-    if session in exp_dates:
-        return session, "0DTE"
-    if weekly in exp_dates:
-        return weekly, "this_week"
-    if monthly in exp_dates:
-        return monthly, "this_month"
-    later = [e for e in exp_dates if e >= session]
-    if later:
-        chosen = min(later)
-        label = "this_week" if chosen <= weekly else ("this_month" if chosen <= monthly else "next_listed")
-        return chosen, label
-    return None, "none"
+    monthly = next_third_friday(session)
+    nxt_month = next_third_friday(monthly + timedelta(days=1))
+    ranked: list[tuple[date, str]] = []
+    seen: set[date] = set()
+
+    def add(d: date, kind: str) -> None:
+        if d in listed and d not in seen:
+            seen.add(d)
+            ranked.append((d, kind))
+
+    add(session, "0DTE")
+    add(weekly, "this_week")
+    add(monthly, "this_month")
+    add(nxt_month, "next_month")
+    for d in sorted(e for e in exp_dates if e >= session):
+        add(d, "next_listed")
+    return ranked
 
 
 def nearest_call(calls: list[dict], spot: float) -> dict | None:
@@ -280,53 +292,75 @@ def main() -> int:
                 continue
             dated = unix_dates(result[0].get("expirationDates") or [])
             exp_dates = [d for _, d in dated]
-            chosen, kind = pick_expiration(exp_dates, session)
-            if chosen is None:
+            candidates = ranked_expirations(exp_dates, session)
+            if not candidates:
                 row["notes"] = "no usable expiration"
                 rows.append(row)
                 continue
-            row["expiry"] = chosen.isoformat()
-            row["expiry_kind"] = kind
-            exp_unix = next(u for u, d in dated if d == chosen)
 
-            chain_exp = option_chain(opener, crumb, ticker, exp_unix)
-            res2 = (chain_exp.get("optionChain") or {}).get("result") or []
-            calls = (((res2[0].get("options") or [{}])[0]).get("calls")) or []
-            call = nearest_call(calls, spot)
-            if call is None:
-                row["notes"] = "no calls on chosen expiry"
-                rows.append(row)
-                continue
-            strike = float(call["strike"])
-            opt_sym = str(call.get("contractSymbol") or "")
-            row["strike"] = strike
-            row["option_symbol"] = opt_sym
+            unix_by_date = {d: u for u, d in dated}
+            tried: list[str] = []
+            filled = False
+            for chosen, kind in candidates:
+                exp_unix = unix_by_date[chosen]
+                chain_exp = option_chain(opener, crumb, ticker, exp_unix)
+                res2 = (chain_exp.get("optionChain") or {}).get("result") or []
+                if not res2:
+                    tried.append(f"{kind}:{chosen.isoformat()}(no chain)")
+                    continue
+                calls = (((res2[0].get("options") or [{}])[0]).get("calls")) or []
+                call = nearest_call(calls, spot)
+                if call is None:
+                    tried.append(f"{kind}:{chosen.isoformat()}(no calls)")
+                    continue
+                opt_sym = str(call.get("contractSymbol") or "")
+                opt5 = parse_chart(fetch_bars(opener, opt_sym, "5m"), session)
+                opt15 = parse_chart(fetch_bars(opener, opt_sym, "15m"), session)
+                p935 = opt5.get("09:30")
+                if p935 is None:
+                    p935 = opt15.get("09:30")
+                p1230, src1230 = checkpoint_close(opt5, opt15, "12:30")
+                p1530, src1530 = checkpoint_close(opt5, opt15, "15:30")
+                has_print = p1230 is not None or p1530 is not None or p935 is not None
+                # Prefer 0DTE if listed even if thin; otherwise require a checkpoint
+                # print unless this is the last candidate.
+                last_cand = (chosen, kind) == candidates[-1]
+                usable = has_print if kind != "0DTE" else True
+                if kind != "0DTE" and p1230 is None and p1530 is None and not last_cand:
+                    tried.append(f"{kind}:{chosen.isoformat()}(no 12:30/3:30)")
+                    continue
+                if not usable and not last_cand:
+                    tried.append(f"{kind}:{chosen.isoformat()}(empty)")
+                    continue
 
-            opt5 = parse_chart(fetch_bars(opener, opt_sym, "5m"), session)
-            opt15 = parse_chart(fetch_bars(opener, opt_sym, "15m"), session)
-            p935 = opt5.get("09:30")
-            if p935 is None:
-                p935 = opt15.get("09:30")
-            if p935 is not None:
-                row["opt_935"] = round(p935, 4)
-
-            p1230, src1230 = checkpoint_close(opt5, opt15, "12:30")
-            p1530, src1530 = checkpoint_close(opt5, opt15, "15:30")
-            row["opt_1230_bar"] = src1230
-            row["opt_1530_bar"] = src1530
-            if p1230 is not None:
-                row["opt_1230"] = round(p1230, 4)
-            if p1530 is not None:
-                row["opt_1530"] = round(p1530, 4)
-            if p935 and p1230 is not None:
-                row["pct_935_to_1230"] = round(100.0 * (p1230 / p935 - 1.0), 1)
-            if p935 and p1530 is not None:
-                row["pct_935_to_1530"] = round(100.0 * (p1530 / p935 - 1.0), 1)
-            if p1230 is None and p1530 is None:
-                last = call.get("lastPrice")
-                row["notes"] = (
-                    f"no option bars; chain lastPrice={last} (not a 12:30/3:30 print)"
-                )
+                row["expiry"] = chosen.isoformat()
+                row["expiry_kind"] = kind
+                row["strike"] = float(call["strike"])
+                row["option_symbol"] = opt_sym
+                if p935 is not None:
+                    row["opt_935"] = round(p935, 4)
+                row["opt_1230_bar"] = src1230
+                row["opt_1530_bar"] = src1530
+                if p1230 is not None:
+                    row["opt_1230"] = round(p1230, 4)
+                if p1530 is not None:
+                    row["opt_1530"] = round(p1530, 4)
+                if p935 and p1230 is not None:
+                    row["pct_935_to_1230"] = round(100.0 * (p1230 / p935 - 1.0), 1)
+                if p935 and p1530 is not None:
+                    row["pct_935_to_1530"] = round(100.0 * (p1530 / p935 - 1.0), 1)
+                if p1230 is None and p1530 is None:
+                    last = call.get("lastPrice")
+                    extra = f"; tried {', '.join(tried)}" if tried else ""
+                    row["notes"] = (
+                        f"no 12:30/3:30 bars; chain lastPrice={last}{extra}"
+                    )
+                elif tried:
+                    row["notes"] = f"fell back after {', '.join(tried)}"
+                filled = True
+                break
+            if not filled:
+                row["notes"] = "no weekly/monthly call with bars; tried " + ", ".join(tried)
         except Exception as e:
             row["notes"] = f"error: {type(e).__name__}: {e}"
         rows.append(row)
