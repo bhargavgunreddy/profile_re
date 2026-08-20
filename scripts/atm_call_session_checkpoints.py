@@ -11,6 +11,7 @@ For each underlying:
 
 from __future__ import annotations
 
+import argparse
 import csv
 import http.cookiejar
 import json
@@ -49,6 +50,29 @@ TICKERS = [
     "ILMN",
     "AGI",
 ]
+
+
+PUT_TICKERS = [
+    "VICR",
+    "NBIS",
+    "MOG.B",
+    "SITM",
+    "MTSI",
+    "STX",
+    "TTMI",
+    "SMTC",
+    "STLD",
+    "VIK",
+    "AMKR",
+    "AAOI",
+    "ZTO",
+    "DOCN",
+]
+
+# Yahoo equity symbols that differ from the user's ticker spelling.
+YAHOO_SYMBOL = {
+    "MOG.B": "MOG-B",
+}
 
 
 def _opener() -> urllib.request.OpenerDirector:
@@ -192,13 +216,11 @@ def ranked_expirations(exp_dates: list[date], session: date) -> list[tuple[date,
     add(weekly, "this_week")
     add(monthly, "this_month")
     add(nxt_month, "next_month")
-    for d in sorted(e for e in exp_dates if e >= session):
-        add(d, "next_listed")
     return ranked
 
 
-def nearest_call(calls: list[dict], spot: float) -> dict | None:
-    priced = [c for c in calls if c.get("strike") is not None]
+def nearest_contract(contracts: list[dict], spot: float) -> dict | None:
+    priced = [c for c in contracts if c.get("strike") is not None]
     if not priced:
         return None
     return min(priced, key=lambda c: abs(float(c["strike"]) - spot))
@@ -253,14 +275,42 @@ def unix_dates(exps: list[int]) -> list[tuple[int, date]]:
 
 
 def main() -> int:
-    session = date(2026, 8, 19)
+    ap = argparse.ArgumentParser(description="ATM option 12:30/3:30 checkpoints")
+    ap.add_argument("--right", choices=("call", "put"), default="call")
+    ap.add_argument("--tickers", default="", help="Comma-separated tickers")
+    ap.add_argument("--session", default="2026-08-19")
+    ap.add_argument("--out", default="")
+    args = ap.parse_args()
+    session = date.fromisoformat(args.session)
+    right = args.right
+    tickers = (
+        [t.strip().upper() for t in args.tickers.split(",") if t.strip()]
+        if args.tickers.strip()
+        else (PUT_TICKERS if right == "put" else TICKERS)
+    )
+    # Keep user's mixed-case / class-share spelling for MOG.B
+    if args.tickers.strip():
+        tickers = [t.strip() for t in args.tickers.split(",") if t.strip()]
+        tickers = [t.upper() if t.upper() != "MOG.B" else "MOG.B" for t in tickers]
+    out = Path(
+        args.out
+        or (
+            f"aug19_2026_atm_{right}_checkpoints.csv"
+            if session == date(2026, 8, 19)
+            else f"{session.isoformat()}_atm_{right}_checkpoints.csv"
+        )
+    )
     opener, crumb = yahoo_session()
     rows: list[dict] = []
+    side_key = "puts" if right == "put" else "calls"
+    noun = "put" if right == "put" else "call"
 
-    for i, ticker in enumerate(TICKERS):
+    for i, ticker in enumerate(tickers):
+        yahoo = YAHOO_SYMBOL.get(ticker, ticker)
         row = {
             "ticker": ticker,
             "session": session.isoformat(),
+            "right": right,
             "spot_935": "",
             "expiry": "",
             "expiry_kind": "",
@@ -276,7 +326,7 @@ def main() -> int:
             "notes": "",
         }
         try:
-            stock5 = parse_chart(fetch_bars(opener, ticker, "5m"), session)
+            stock5 = parse_chart(fetch_bars(opener, yahoo, "5m"), session)
             spot = stock5.get("09:30")
             if spot is None:
                 row["notes"] = "missing 09:30-09:35 5m stock bar"
@@ -284,7 +334,7 @@ def main() -> int:
                 continue
             row["spot_935"] = round(spot, 4)
 
-            chain = option_chain(opener, crumb, ticker)
+            chain = option_chain(opener, crumb, yahoo)
             result = (chain.get("optionChain") or {}).get("result") or []
             if not result:
                 row["notes"] = "no option chain"
@@ -303,17 +353,17 @@ def main() -> int:
             filled = False
             for chosen, kind in candidates:
                 exp_unix = unix_by_date[chosen]
-                chain_exp = option_chain(opener, crumb, ticker, exp_unix)
+                chain_exp = option_chain(opener, crumb, yahoo, exp_unix)
                 res2 = (chain_exp.get("optionChain") or {}).get("result") or []
                 if not res2:
                     tried.append(f"{kind}:{chosen.isoformat()}(no chain)")
                     continue
-                calls = (((res2[0].get("options") or [{}])[0]).get("calls")) or []
-                call = nearest_call(calls, spot)
-                if call is None:
-                    tried.append(f"{kind}:{chosen.isoformat()}(no calls)")
+                contracts = (((res2[0].get("options") or [{}])[0]).get(side_key)) or []
+                contract = nearest_contract(contracts, spot)
+                if contract is None:
+                    tried.append(f"{kind}:{chosen.isoformat()}(no {noun}s)")
                     continue
-                opt_sym = str(call.get("contractSymbol") or "")
+                opt_sym = str(contract.get("contractSymbol") or "")
                 opt5 = parse_chart(fetch_bars(opener, opt_sym, "5m"), session)
                 opt15 = parse_chart(fetch_bars(opener, opt_sym, "15m"), session)
                 p935 = opt5.get("09:30")
@@ -321,21 +371,14 @@ def main() -> int:
                     p935 = opt15.get("09:30")
                 p1230, src1230 = checkpoint_close(opt5, opt15, "12:30")
                 p1530, src1530 = checkpoint_close(opt5, opt15, "15:30")
-                has_print = p1230 is not None or p1530 is not None or p935 is not None
-                # Prefer 0DTE if listed even if thin; otherwise require a checkpoint
-                # print unless this is the last candidate.
                 last_cand = (chosen, kind) == candidates[-1]
-                usable = has_print if kind != "0DTE" else True
                 if kind != "0DTE" and p1230 is None and p1530 is None and not last_cand:
                     tried.append(f"{kind}:{chosen.isoformat()}(no 12:30/3:30)")
-                    continue
-                if not usable and not last_cand:
-                    tried.append(f"{kind}:{chosen.isoformat()}(empty)")
                     continue
 
                 row["expiry"] = chosen.isoformat()
                 row["expiry_kind"] = kind
-                row["strike"] = float(call["strike"])
+                row["strike"] = float(contract["strike"])
                 row["option_symbol"] = opt_sym
                 if p935 is not None:
                     row["opt_935"] = round(p935, 4)
@@ -350,7 +393,7 @@ def main() -> int:
                 if p935 and p1530 is not None:
                     row["pct_935_to_1530"] = round(100.0 * (p1530 / p935 - 1.0), 1)
                 if p1230 is None and p1530 is None:
-                    last = call.get("lastPrice")
+                    last = contract.get("lastPrice")
                     extra = f"; tried {', '.join(tried)}" if tried else ""
                     row["notes"] = (
                         f"no 12:30/3:30 bars; chain lastPrice={last}{extra}"
@@ -360,13 +403,12 @@ def main() -> int:
                 filled = True
                 break
             if not filled:
-                row["notes"] = "no weekly/monthly call with bars; tried " + ", ".join(tried)
+                row["notes"] = f"no weekly/monthly {noun} with bars; tried " + ", ".join(tried)
         except Exception as e:
             row["notes"] = f"error: {type(e).__name__}: {e}"
         rows.append(row)
         time.sleep(0.15 if i < 3 else 0.08)
 
-    out = Path("aug19_2026_atm_call_checkpoints.csv")
     fields = list(rows[0].keys()) if rows else []
     with out.open("w", newline="") as f:
         w = csv.DictWriter(f, fieldnames=fields)
@@ -375,7 +417,7 @@ def main() -> int:
     print(f"wrote {out} rows={len(rows)}")
     for r in rows:
         print(
-            f"{r['ticker']:5} spot={r['spot_935']!s:>8} {r['expiry_kind']:11} "
+            f"{r['ticker']:6} spot={r['spot_935']!s:>8} {r['expiry_kind']:11} "
             f"{r['expiry']} K={r['strike']!s:>7}  "
             f"12:30={r['opt_1230']!s:>7}  3:30={r['opt_1530']!s:>7}  {r['notes']}"
         )
