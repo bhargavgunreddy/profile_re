@@ -11,8 +11,8 @@ for a in "$@"; do
   if [[ "$a" == "--no-serve" ]]; then SERVE=0; fi
 done
 
-echo "==> Building gainsandlosses_enriched.csv from Orders.csv"
-python3 src/polygon/build_gains_from_orders.py --orders_csv Orders.csv --out_csv gainsandlosses_enriched.csv
+echo "==> Building gainsandlosses_enriched.csv from Orders.csv (same-day trades only)"
+python3 src/polygon/build_gains_from_orders.py --orders_csv Orders.csv --out_csv gainsandlosses_enriched.csv --same-day-only
 
 echo "==> Building trade_dashboard_data.json from gainsandlosses_enriched.csv"
 python3 src/polygon/build_trade_dashboard_data.py \
