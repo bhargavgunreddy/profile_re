@@ -103,8 +103,14 @@ def main() -> None:
         action="store_true",
         help="Only include trades opened and closed on the same calendar day",
     )
+    ap.add_argument(
+        "--from-date",
+        default="",
+        help="Only include trades with close_date on/after this YYYY-MM-DD date",
+    )
     args = ap.parse_args()
     fee_per_contract = args.commission + args.reg_fee
+    from_date = (args.from_date or "").strip()
 
     lines = Path(args.orders_csv).read_text(encoding="utf-8", errors="replace").splitlines()
     if len(lines) < 2:
@@ -276,6 +282,11 @@ def main() -> None:
         before = len(out_rows)
         out_rows = [r for r in out_rows if r["open_date"] == r["close_date"]]
         print(f"same_day_only: kept {len(out_rows)}/{before} trades")
+
+    if from_date:
+        before = len(out_rows)
+        out_rows = [r for r in out_rows if r["close_date"] >= from_date]
+        print(f"from_date={from_date}: kept {len(out_rows)}/{before} trades")
 
     out_rows.sort(key=lambda r: (r["close_date"], r["instrument"]))
 

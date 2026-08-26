@@ -1,156 +1,85 @@
 {
-  "generated_at": "2026-08-26T17:29:20.827552",
+  "generated_at": "2026-08-26T17:35:53.653205",
   "source_csv": "gainsandlosses_enriched.csv",
   "kpis": {
-    "trades": 77,
-    "total_pnl": -3947.7,
-    "win_rate": 59.74025974025974,
-    "avg_win": 112.99826086956521,
-    "avg_loss": -295.02,
-    "profit_factor": 0.568350751507279,
-    "expectancy": -51.26883116883117
+    "trades": 58,
+    "total_pnl": -1299.24,
+    "win_rate": 67.24137931034483,
+    "avg_win": 103.2802564102564,
+    "avg_loss": -280.3773684210526,
+    "profit_factor": 0.756110655376119,
+    "expectancy": -22.400689655172414
   },
   "equity_curve": [
     {
-      "date": "2026-07-29",
-      "cum_pnl": -612.8599999999999,
-      "day_pnl": -612.8599999999999
-    },
-    {
-      "date": "2026-07-31",
-      "cum_pnl": -1284.29,
-      "day_pnl": -671.43
-    },
-    {
-      "date": "2026-08-03",
-      "cum_pnl": -2478.1499999999996,
-      "day_pnl": -1193.86
-    },
-    {
-      "date": "2026-08-04",
-      "cum_pnl": -2524.5799999999995,
-      "day_pnl": -46.43
-    },
-    {
-      "date": "2026-08-05",
-      "cum_pnl": -2446.0099999999993,
-      "day_pnl": 78.57
-    },
-    {
-      "date": "2026-08-06",
-      "cum_pnl": -2337.439999999999,
-      "day_pnl": 108.57
-    },
-    {
-      "date": "2026-08-07",
-      "cum_pnl": -2274.869999999999,
-      "day_pnl": 62.57
-    },
-    {
-      "date": "2026-08-10",
-      "cum_pnl": -2737.019999999999,
-      "day_pnl": -462.15000000000003
-    },
-    {
-      "date": "2026-08-11",
-      "cum_pnl": -2791.449999999999,
-      "day_pnl": -54.43
-    },
-    {
-      "date": "2026-08-13",
-      "cum_pnl": -2393.309999999999,
-      "day_pnl": 398.14
-    },
-    {
-      "date": "2026-08-14",
-      "cum_pnl": -2453.739999999999,
-      "day_pnl": -60.43
-    },
-    {
-      "date": "2026-08-17",
-      "cum_pnl": -2337.029999999999,
-      "day_pnl": 116.70999999999998
-    },
-    {
-      "date": "2026-08-18",
-      "cum_pnl": -2648.4599999999987,
-      "day_pnl": -311.43
-    },
-    {
       "date": "2026-08-19",
-      "cum_pnl": -2346.8999999999987,
+      "cum_pnl": 301.5599999999999,
       "day_pnl": 301.5599999999999
     },
     {
       "date": "2026-08-20",
-      "cum_pnl": -1592.0599999999986,
+      "cum_pnl": 1056.4,
       "day_pnl": 754.8400000000001
     },
     {
       "date": "2026-08-21",
-      "cum_pnl": -1444.7899999999986,
+      "cum_pnl": 1203.67,
       "day_pnl": 147.27000000000004
     },
     {
       "date": "2026-08-24",
-      "cum_pnl": -4134.659999999998,
+      "cum_pnl": -1486.1999999999994,
       "day_pnl": -2689.8699999999994
     },
     {
       "date": "2026-08-25",
-      "cum_pnl": -3750.3999999999983,
+      "cum_pnl": -1101.9399999999994,
       "day_pnl": 384.25999999999993
     },
     {
       "date": "2026-08-26",
-      "cum_pnl": -3947.6999999999985,
+      "cum_pnl": -1299.2399999999993,
       "day_pnl": -197.30000000000007
     }
   ],
   "monthly": [
     {
-      "month": "2026-07",
-      "pnl": -1284.29,
-      "trades": 3,
-      "win_rate": 33.33333333333333
-    },
-    {
       "month": "2026-08",
-      "pnl": -2663.409999999998,
-      "trades": 74,
-      "win_rate": 60.810810810810814
+      "pnl": -1299.2400000000018,
+      "trades": 58,
+      "win_rate": 67.24137931034483
     }
   ],
   "weekday": [
     {
       "weekday": "Mon",
-      "pnl": -4229.17,
-      "trades": 16,
-      "win_rate": 37.5
+      "pnl": -2689.8699999999994,
+      "trades": 9,
+      "win_rate": 55.55555555555556
     },
     {
       "weekday": "Tue",
-      "pnl": -28.03000000000008,
-      "trades": 12,
-      "win_rate": 58.333333333333336
+      "pnl": 384.25999999999993,
+      "trades": 9,
+      "win_rate": 77.77777777777779
     },
     {
       "weekday": "Wed",
-      "pnl": -430.0300000000001,
-      "trades": 21,
-      "win_rate": 61.904761904761905
+      "pnl": 104.25999999999988,
+      "trades": 18,
+      "win_rate": 61.111111111111114
     },
     {
       "weekday": "Thu",
-      "pnl": 1261.5499999999995,
-      "trades": 14,
-      "win_rate": 85.71428571428571
+      "pnl": 754.8400000000001,
+      "trades": 11,
+      "win_rate": 81.81818181818183
     },
     {
       "weekday": "Fri",
-      "pnl": -522.0199999999998,
-      "trades": 14,
-      "win_rate": 57.14285714285714
+      "pnl": 147.27000000000004,
+      "trades": 11,
+      "win_rate": 63.63636363636363
     }
   ],
   "market_trade_matrix": {
@@ -182,65 +111,65 @@
   "time_of_day": [
     {
       "label": "09:30-10:00",
-      "pnl": 2843.500000000002,
-      "trades": 41,
-      "win_rate": 82.92682926829268
+      "pnl": 2196.7900000000013,
+      "trades": 38,
+      "win_rate": 81.57894736842105
     },
     {
       "label": "10:00-11:30",
-      "pnl": -843.8900000000001,
-      "trades": 22,
-      "win_rate": 45.45454545454545
+      "pnl": -678.6000000000001,
+      "trades": 19,
+      "win_rate": 42.10526315789473
     },
     {
       "label": "11:30-13:00",
-      "pnl": -2871.8599999999997,
-      "trades": 2,
-      "win_rate": 0.0
-    },
-    {
-      "label": "13:00-14:30",
-      "pnl": -76.43,
+      "pnl": -2817.43,
       "trades": 1,
       "win_rate": 0.0
     },
     {
+      "label": "13:00-14:30",
+      "pnl": 0.0,
+      "trades": 0,
+      "win_rate": 0.0
+    },
+    {
       "label": "14:30-15:45",
-      "pnl": -824.29,
-      "trades": 3,
-      "win_rate": 33.33333333333333
+      "pnl": 0.0,
+      "trades": 0,
+      "win_rate": 0.0
     },
     {
       "label": "15:45-16:00",
-      "pnl": -2174.73,
-      "trades": 8,
-      "win_rate": 12.5
+      "pnl": 0.0,
+      "trades": 0,
+      "win_rate": 0.0
     }
   ],
   "hold_time": [
     {
       "label": "0-2 min",
-      "pnl": 1752.1199999999994,
-      "trades": 16,
-      "win_rate": 93.75
+      "pnl": 1246.4099999999999,
+      "trades": 13,
+      "win_rate": 92.3076923076923
     },
     {
       "label": "2-5 min",
-      "pnl": 785.8200000000002,
-      "trades": 17,
-      "win_rate": 70.58823529411765
+      "pnl": 764.5400000000002,
+      "trades": 13,
+      "win_rate": 84.61538461538461
     },
     {
       "label": "5-15 min",
-      "pnl": 897.9699999999993,
-      "trades": 21,
-      "win_rate": 71.42857142857143
+      "pnl": 935.8299999999992,
+      "trades": 19,
+      "win_rate": 73.68421052631578
     },
     {
       "label": "15-30 min",
-      "pnl": -1438.0200000000002,
-      "trades": 13,
-      "win_rate": 30.76923076923077
+      "pnl": -1005.8699999999999,
+      "trades": 8,
+      "win_rate": 25.0
     },
     {
       "label": "30-60 min",
@@ -250,18 +179,18 @@
     },
     {
       "label": "60+ min",
-      "pnl": -5122.15,
-      "trades": 5,
+      "pnl": -2817.43,
+      "trades": 1,
       "win_rate": 0.0
     }
   ],
   "qty_buckets": [
     {
       "label": "1 ct",
-      "pnl": -4151.539999999996,
-      "trades": 75,
-      "win_rate": 58.666666666666664,
-      "avg_pnl": -55.35386666666662
+      "pnl": -1503.080000000002,
+      "trades": 56,
+      "win_rate": 66.07142857142857,
+      "avg_pnl": -26.84071428571432
     },
     {
       "label": "2 ct",
@@ -297,23 +226,6 @@
       "hold_minutes": 13.8
     },
     {
-      "date": "2026-07-29",
-      "instrument": "MU Jul 29 '26 $800 Call",
-      "action": "Sell To Close",
-      "type": "CALL",
-      "quantity": 1.0,
-      "cost": 825.72,
-      "proceeds": 1099.28,
-      "gain": 273.57,
-      "pnl_pct": 33.13108559802354,
-      "win": 1,
-      "market_dir": "NA",
-      "market_ret_pct": 0.0,
-      "close_time": "10:33:01",
-      "open_time": "10:24:29",
-      "hold_minutes": 8.5
-    },
-    {
       "date": "2026-08-24",
       "instrument": "SNDK Aug 28 '26 $1440 Put",
       "action": "Sell To Close",
@@ -329,40 +241,6 @@
       "close_time": "09:43:36",
       "open_time": "09:40:55",
       "hold_minutes": 2.7
-    },
-    {
-      "date": "2026-08-17",
-      "instrument": "SNDK Aug 21 '26 $1750 Call",
-      "action": "Sell To Close",
-      "type": "CALL",
-      "quantity": 1.0,
-      "cost": 7250.72,
-      "proceeds": 7499.28,
-      "gain": 248.57,
-      "pnl_pct": 3.428211267294834,
-      "win": 1,
-      "market_dir": "NA",
-      "market_ret_pct": 0.0,
-      "close_time": "09:45:16",
-      "open_time": "09:44:22",
-      "hold_minutes": 0.9
-    },
-    {
-      "date": "2026-08-13",
-      "instrument": "DELL Aug 14 '26 $497.5 Call",
-      "action": "Sell To Close",
-      "type": "CALL",
-      "quantity": 1.0,
-      "cost": 979.72,
-      "proceeds": 1199.28,
-      "gain": 219.57,
-      "pnl_pct": 22.41150532805291,
-      "win": 1,
-      "market_dir": "NA",
-      "market_ret_pct": 0.0,
-      "close_time": "09:38:02",
-      "open_time": "09:35:27",
-      "hold_minutes": 2.6
     },
     {
       "date": "2026-08-19",
@@ -399,23 +277,6 @@
       "hold_minutes": 20.4
     },
     {
-      "date": "2026-08-13",
-      "instrument": "NBIS Aug 14 '26 $265 Call",
-      "action": "Sell To Close",
-      "type": "CALL",
-      "quantity": 1.0,
-      "cost": 920.72,
-      "proceeds": 1099.28,
-      "gain": 178.57,
-      "pnl_pct": 19.39460422278217,
-      "win": 1,
-      "market_dir": "NA",
-      "market_ret_pct": 0.0,
-      "close_time": "09:42:17",
-      "open_time": "09:40:25",
-      "hold_minutes": 1.9
-    },
-    {
       "date": "2026-08-24",
       "instrument": "LITE Aug 28 '26 $800 Put",
       "action": "Sell To Close",
@@ -448,6 +309,74 @@
       "close_time": "09:51:48",
       "open_time": "09:45:00",
       "hold_minutes": 6.8
+    },
+    {
+      "date": "2026-08-19",
+      "instrument": "DELL Aug 21 '26 $437.5 Put",
+      "action": "Sell To Close",
+      "type": "PUT",
+      "quantity": 1.0,
+      "cost": 955.72,
+      "proceeds": 1114.28,
+      "gain": 158.57,
+      "pnl_pct": 16.591679571422592,
+      "win": 1,
+      "market_dir": "NA",
+      "market_ret_pct": 0.0,
+      "close_time": "09:54:35",
+      "open_time": "09:53:40",
+      "hold_minutes": 0.9
+    },
+    {
+      "date": "2026-08-19",
+      "instrument": "LITE Aug 21 '26 $835 Put",
+      "action": "Sell To Close",
+      "type": "PUT",
+      "quantity": 1.0,
+      "cost": 2160.72,
+      "proceeds": 2319.28,
+      "gain": 158.57,
+      "pnl_pct": 7.338757451219964,
+      "win": 1,
+      "market_dir": "NA",
+      "market_ret_pct": 0.0,
+      "close_time": "09:58:15",
+      "open_time": "09:56:46",
+      "hold_minutes": 1.5
+    },
+    {
+      "date": "2026-08-21",
+      "instrument": "LITE Aug 21 '26 $900 Call",
+      "action": "Sell To Close",
+      "type": "CALL",
+      "quantity": 1.0,
+      "cost": 1490.72,
+      "proceeds": 1649.28,
+      "gain": 158.57,
+      "pnl_pct": 10.637141783835997,
+      "win": 1,
+      "market_dir": "NA",
+      "market_ret_pct": 0.0,
+      "close_time": "09:45:11",
+      "open_time": "09:35:26",
+      "hold_minutes": 9.8
+    },
+    {
+      "date": "2026-08-26",
+      "instrument": "LLY Aug 28 '26 $1195 Put",
+      "action": "Sell To Close",
+      "type": "PUT",
+      "quantity": 1.0,
+      "cost": 1640.72,
+      "proceeds": 1799.28,
+      "gain": 158.57,
+      "pnl_pct": 9.664659417816567,
+      "win": 1,
+      "market_dir": "NA",
+      "market_ret_pct": 0.0,
+      "close_time": "09:42:06",
+      "open_time": "09:40:21",
+      "hold_minutes": 1.8
     }
   ],
   "biggest_losses": [
@@ -469,74 +398,6 @@
       "hold_minutes": 105.4
     },
     {
-      "date": "2026-07-29",
-      "instrument": "SPX Jul 29 '26 $7300 Put",
-      "action": "Sell To Close",
-      "type": "PUT",
-      "quantity": 1.0,
-      "cost": 900.72,
-      "proceeds": 14.28,
-      "gain": -886.43,
-      "pnl_pct": -98.41349142907895,
-      "win": 0,
-      "market_dir": "NA",
-      "market_ret_pct": 0.0,
-      "close_time": "14:41:44",
-      "open_time": "12:13:38",
-      "hold_minutes": 148.1
-    },
-    {
-      "date": "2026-08-03",
-      "instrument": "MU Aug 03 '26 $820 Put",
-      "action": "Sell To Close",
-      "type": "PUT",
-      "quantity": 1.0,
-      "cost": 700.72,
-      "proceeds": 8.28,
-      "gain": -692.43,
-      "pnl_pct": -98.8169311565247,
-      "win": 0,
-      "market_dir": "NA",
-      "market_ret_pct": 0.0,
-      "close_time": "15:59:42",
-      "open_time": "12:17:15",
-      "hold_minutes": 222.4
-    },
-    {
-      "date": "2026-07-31",
-      "instrument": "MU Jul 31 '26 $820 Put",
-      "action": "Sell To Close",
-      "type": "PUT",
-      "quantity": 1.0,
-      "cost": 700.72,
-      "proceeds": 29.28,
-      "gain": -671.43,
-      "pnl_pct": -95.82001370019407,
-      "win": 0,
-      "market_dir": "NA",
-      "market_ret_pct": 0.0,
-      "close_time": "15:55:00",
-      "open_time": "11:54:40",
-      "hold_minutes": 240.3
-    },
-    {
-      "date": "2026-08-03",
-      "instrument": "MU Aug 03 '26 $825 Call",
-      "action": "Sell To Close",
-      "type": "CALL",
-      "quantity": 1.0,
-      "cost": 900.72,
-      "proceeds": 399.28,
-      "gain": -501.43,
-      "pnl_pct": -55.66990851763034,
-      "win": 0,
-      "market_dir": "NA",
-      "market_ret_pct": 0.0,
-      "close_time": "11:25:53",
-      "open_time": "11:03:03",
-      "hold_minutes": 22.8
-    },
-    {
       "date": "2026-08-19",
       "instrument": "MRVL Aug 21 '26 $245 Call",
       "action": "Sell To Close",
@@ -552,23 +413,6 @@
       "close_time": "09:51:38",
       "open_time": "09:34:24",
       "hold_minutes": 17.2
-    },
-    {
-      "date": "2026-08-10",
-      "instrument": "SPX Aug 10 '26 $7775 Call [EXPIRED]",
-      "action": "Expired Worthless",
-      "type": "CALL",
-      "quantity": 1.0,
-      "cost": 400.72,
-      "proceeds": 0.0,
-      "gain": -400.72,
-      "pnl_pct": -100.0,
-      "win": 0,
-      "market_dir": "NA",
-      "market_ret_pct": 0.0,
-      "close_time": "16:00:00",
-      "open_time": "10:54:00",
-      "hold_minutes": 0.0
     },
     {
       "date": "2026-08-26",
@@ -588,23 +432,6 @@
       "hold_minutes": 19.7
     },
     {
-      "date": "2026-08-18",
-      "instrument": "SPX Aug 18 '26 $7695 Call",
-      "action": "Sell To Close",
-      "type": "CALL",
-      "quantity": 1.0,
-      "cost": 400.72,
-      "proceeds": 89.28,
-      "gain": -311.43,
-      "pnl_pct": -77.7176083050509,
-      "win": 0,
-      "market_dir": "NA",
-      "market_ret_pct": 0.0,
-      "close_time": "15:57:32",
-      "open_time": "15:51:14",
-      "hold_minutes": 6.3
-    },
-    {
       "date": "2026-08-24",
       "instrument": "NUE Sep 18 '26 $260 Call",
       "action": "Sell To Close",
@@ -620,332 +447,111 @@
       "close_time": "10:02:33",
       "open_time": "09:42:26",
       "hold_minutes": 20.1
+    },
+    {
+      "date": "2026-08-21",
+      "instrument": "SCCO Aug 21 '26 $215 Call",
+      "action": "Sell To Close",
+      "type": "CALL",
+      "quantity": 1.0,
+      "cost": 265.72,
+      "proceeds": 94.28,
+      "gain": -171.43,
+      "pnl_pct": -64.51527924130663,
+      "win": 0,
+      "market_dir": "NA",
+      "market_ret_pct": 0.0,
+      "close_time": "10:10:36",
+      "open_time": "10:00:26",
+      "hold_minutes": 10.2
+    },
+    {
+      "date": "2026-08-26",
+      "instrument": "DKS Sep 18 '26 $120 Put",
+      "action": "Sell To Close",
+      "type": "PUT",
+      "quantity": 1.0,
+      "cost": 510.72,
+      "proceeds": 339.28,
+      "gain": -171.43,
+      "pnl_pct": -33.56633771929825,
+      "win": 0,
+      "market_dir": "NA",
+      "market_ret_pct": 0.0,
+      "close_time": "09:45:41",
+      "open_time": "09:31:16",
+      "hold_minutes": 14.4
+    },
+    {
+      "date": "2026-08-24",
+      "instrument": "STLD Sep 18 '26 $240 Call",
+      "action": "Sell To Close",
+      "type": "CALL",
+      "quantity": 1.0,
+      "cost": 1230.72,
+      "proceeds": 1066.28,
+      "gain": -164.43,
+      "pnl_pct": -13.360471918876755,
+      "win": 0,
+      "market_dir": "NA",
+      "market_ret_pct": 0.0,
+      "close_time": "09:50:54",
+      "open_time": "09:39:28",
+      "hold_minutes": 11.4
+    },
+    {
+      "date": "2026-08-26",
+      "instrument": "ORCL Aug 28 '26 $150 Call",
+      "action": "Sell To Close",
+      "type": "CALL",
+      "quantity": 1.0,
+      "cost": 390.72,
+      "proceeds": 235.28,
+      "gain": -155.43,
+      "pnl_pct": -39.7804054054054,
+      "win": 0,
+      "market_dir": "NA",
+      "market_ret_pct": 0.0,
+      "close_time": "10:23:40",
+      "open_time": "09:35:47",
+      "hold_minutes": 47.9
+    },
+    {
+      "date": "2026-08-24",
+      "instrument": "CRCL Aug 28 '26 $91 Call",
+      "action": "Sell To Close",
+      "type": "CALL",
+      "quantity": 1.0,
+      "cost": 435.72,
+      "proceeds": 299.28,
+      "gain": -136.43,
+      "pnl_pct": -31.311392637473606,
+      "win": 0,
+      "market_dir": "NA",
+      "market_ret_pct": 0.0,
+      "close_time": "10:06:02",
+      "open_time": "09:34:39",
+      "hold_minutes": 31.4
+    },
+    {
+      "date": "2026-08-21",
+      "instrument": "ROST Aug 21 '26 $235 Call",
+      "action": "Sell To Close",
+      "type": "CALL",
+      "quantity": 1.0,
+      "cost": 500.72,
+      "proceeds": 369.28,
+      "gain": -131.43,
+      "pnl_pct": -26.248202588272886,
+      "win": 0,
+      "market_dir": "NA",
+      "market_ret_pct": 0.0,
+      "close_time": "10:11:12",
+      "open_time": "09:43:44",
+      "hold_minutes": 27.5
     }
   ],
   "trades": [
-    {
-      "date": "2026-07-29",
-      "instrument": "MU Jul 29 '26 $800 Call",
-      "action": "Sell To Close",
-      "type": "CALL",
-      "quantity": 1.0,
-      "cost": 825.72,
-      "proceeds": 1099.28,
-      "gain": 273.57,
-      "pnl_pct": 33.13108559802354,
-      "win": 1,
-      "market_dir": "NA",
-      "market_ret_pct": 0.0,
-      "close_time": "10:33:01",
-      "open_time": "10:24:29",
-      "hold_minutes": 8.5
-    },
-    {
-      "date": "2026-07-29",
-      "instrument": "SPX Jul 29 '26 $7300 Put",
-      "action": "Sell To Close",
-      "type": "PUT",
-      "quantity": 1.0,
-      "cost": 900.72,
-      "proceeds": 14.28,
-      "gain": -886.43,
-      "pnl_pct": -98.41349142907895,
-      "win": 0,
-      "market_dir": "NA",
-      "market_ret_pct": 0.0,
-      "close_time": "14:41:44",
-      "open_time": "12:13:38",
-      "hold_minutes": 148.1
-    },
-    {
-      "date": "2026-07-31",
-      "instrument": "MU Jul 31 '26 $820 Put",
-      "action": "Sell To Close",
-      "type": "PUT",
-      "quantity": 1.0,
-      "cost": 700.72,
-      "proceeds": 29.28,
-      "gain": -671.43,
-      "pnl_pct": -95.82001370019407,
-      "win": 0,
-      "market_dir": "NA",
-      "market_ret_pct": 0.0,
-      "close_time": "15:55:00",
-      "open_time": "11:54:40",
-      "hold_minutes": 240.3
-    },
-    {
-      "date": "2026-08-03",
-      "instrument": "MU Aug 03 '26 $820 Put",
-      "action": "Sell To Close",
-      "type": "PUT",
-      "quantity": 1.0,
-      "cost": 700.72,
-      "proceeds": 8.28,
-      "gain": -692.43,
-      "pnl_pct": -98.8169311565247,
-      "win": 0,
-      "market_dir": "NA",
-      "market_ret_pct": 0.0,
-      "close_time": "15:59:42",
-      "open_time": "12:17:15",
-      "hold_minutes": 222.4
-    },
-    {
-      "date": "2026-08-03",
-      "instrument": "MU Aug 03 '26 $825 Call",
-      "action": "Sell To Close",
-      "type": "CALL",
-      "quantity": 1.0,
-      "cost": 900.72,
-      "proceeds": 399.28,
-      "gain": -501.43,
-      "pnl_pct": -55.66990851763034,
-      "win": 0,
-      "market_dir": "NA",
-      "market_ret_pct": 0.0,
-      "close_time": "11:25:53",
-      "open_time": "11:03:03",
-      "hold_minutes": 22.8
-    },
-    {
-      "date": "2026-08-04",
-      "instrument": "SPX Aug 04 '26 $7770 Call",
-      "action": "Sell To Close",
-      "type": "CALL",
-      "quantity": 1.0,
-      "cost": 85.72,
-      "proceeds": 39.28,
-      "gain": -46.43,
-      "pnl_pct": -54.16472235184321,
-      "win": 0,
-      "market_dir": "NA",
-      "market_ret_pct": 0.0,
-      "close_time": "15:42:53",
-      "open_time": "15:22:27",
-      "hold_minutes": 20.4
-    },
-    {
-      "date": "2026-08-05",
-      "instrument": "MU Aug 05 '26 $910 Put",
-      "action": "Sell To Close",
-      "type": "PUT",
-      "quantity": 1.0,
-      "cost": 820.72,
-      "proceeds": 899.28,
-      "gain": 78.57,
-      "pnl_pct": 9.573301491373428,
-      "win": 1,
-      "market_dir": "NA",
-      "market_ret_pct": 0.0,
-      "close_time": "15:54:31",
-      "open_time": "15:53:55",
-      "hold_minutes": 0.6
-    },
-    {
-      "date": "2026-08-06",
-      "instrument": "SPX Aug 06 '26 $7710 Put",
-      "action": "Sell To Close",
-      "type": "PUT",
-      "quantity": 1.0,
-      "cost": 340.72,
-      "proceeds": 449.28,
-      "gain": 108.57,
-      "pnl_pct": 31.864874383658133,
-      "win": 1,
-      "market_dir": "NA",
-      "market_ret_pct": 0.0,
-      "close_time": "15:25:05",
-      "open_time": "14:56:07",
-      "hold_minutes": 29.0
-    },
-    {
-      "date": "2026-08-07",
-      "instrument": "TSLA Aug 07 '26 $330 Call",
-      "action": "Sell To Close",
-      "type": "CALL",
-      "quantity": 1.0,
-      "cost": 66.72,
-      "proceeds": 129.28,
-      "gain": 62.57,
-      "pnl_pct": 93.77997601918466,
-      "win": 1,
-      "market_dir": "NA",
-      "market_ret_pct": 0.0,
-      "close_time": "10:28:45",
-      "open_time": "10:01:49",
-      "hold_minutes": 26.9
-    },
-    {
-      "date": "2026-08-10",
-      "instrument": "MU Aug 10 '26 $870 Call",
-      "action": "Sell To Close",
-      "type": "CALL",
-      "quantity": 1.0,
-      "cost": 70.72,
-      "proceeds": 9.28,
-      "gain": -61.43,
-      "pnl_pct": -86.86368778280543,
-      "win": 0,
-      "market_dir": "NA",
-      "market_ret_pct": 0.0,
-      "close_time": "15:59:22",
-      "open_time": "15:55:14",
-      "hold_minutes": 4.1
-    },
-    {
-      "date": "2026-08-10",
-      "instrument": "SPX Aug 10 '26 $7775 Call [EXPIRED]",
-      "action": "Expired Worthless",
-      "type": "CALL",
-      "quantity": 1.0,
-      "cost": 400.72,
-      "proceeds": 0.0,
-      "gain": -400.72,
-      "pnl_pct": -100.0,
-      "win": 0,
-      "market_dir": "NA",
-      "market_ret_pct": 0.0,
-      "close_time": "16:00:00",
-      "open_time": "10:54:00",
-      "hold_minutes": 0.0
-    },
-    {
-      "date": "2026-08-11",
-      "instrument": "TSLA Aug 12 '26 $335 Call",
-      "action": "Sell To Close",
-      "type": "CALL",
-      "quantity": 1.0,
-      "cost": 253.72,
-      "proceeds": 199.28,
-      "gain": -54.43,
-      "pnl_pct": -21.4527825949866,
-      "win": 0,
-      "market_dir": "NA",
-      "market_ret_pct": 0.0,
-      "close_time": "12:19:46",
-      "open_time": "11:15:48",
-      "hold_minutes": 64.0
-    },
-    {
-      "date": "2026-08-13",
-      "instrument": "DELL Aug 14 '26 $497.5 Call",
-      "action": "Sell To Close",
-      "type": "CALL",
-      "quantity": 1.0,
-      "cost": 979.72,
-      "proceeds": 1199.28,
-      "gain": 219.57,
-      "pnl_pct": 22.41150532805291,
-      "win": 1,
-      "market_dir": "NA",
-      "market_ret_pct": 0.0,
-      "close_time": "09:38:02",
-      "open_time": "09:35:27",
-      "hold_minutes": 2.6
-    },
-    {
-      "date": "2026-08-13",
-      "instrument": "NBIS Aug 14 '26 $265 Call",
-      "action": "Sell To Close",
-      "type": "CALL",
-      "quantity": 1.0,
-      "cost": 920.72,
-      "proceeds": 1099.28,
-      "gain": 178.57,
-      "pnl_pct": 19.39460422278217,
-      "win": 1,
-      "market_dir": "NA",
-      "market_ret_pct": 0.0,
-      "close_time": "09:42:17",
-      "open_time": "09:40:25",
-      "hold_minutes": 1.9
-    },
-    {
-      "date": "2026-08-14",
-      "instrument": "MU Aug 14 '26 $965 Put",
-      "action": "Sell To Close",
-      "type": "PUT",
-      "quantity": 1.0,
-      "cost": 91.72,
-      "proceeds": 31.28,
-      "gain": -60.43,
-      "pnl_pct": -65.88530309638028,
-      "win": 0,
-      "market_dir": "NA",
-      "market_ret_pct": 0.0,
-      "close_time": "15:59:42",
-      "open_time": "15:55:40",
-      "hold_minutes": 4.0
-    },
-    {
-      "date": "2026-08-17",
-      "instrument": "MRVL Aug 21 '26 $235 Call",
-      "action": "Sell To Close",
-      "type": "CALL",
-      "quantity": 1.0,
-      "cost": 945.72,
-      "proceeds": 869.28,
-      "gain": -76.43,
-      "pnl_pct": -8.081673222518294,
-      "win": 0,
-      "market_dir": "NA",
-      "market_ret_pct": 0.0,
-      "close_time": "13:15:06",
-      "open_time": "13:11:11",
-      "hold_minutes": 3.9
-    },
-    {
-      "date": "2026-08-17",
-      "instrument": "MU Aug 17 '26 $1010 Put",
-      "action": "Sell To Close",
-      "type": "PUT",
-      "quantity": 1.0,
-      "cost": 170.72,
-      "proceeds": 115.28,
-      "gain": -55.43,
-      "pnl_pct": -32.46836925960637,
-      "win": 0,
-      "market_dir": "NA",
-      "market_ret_pct": 0.0,
-      "close_time": "15:55:14",
-      "open_time": "15:28:38",
-      "hold_minutes": 26.6
-    },
-    {
-      "date": "2026-08-17",
-      "instrument": "SNDK Aug 21 '26 $1750 Call",
-      "action": "Sell To Close",
-      "type": "CALL",
-      "quantity": 1.0,
-      "cost": 7250.72,
-      "proceeds": 7499.28,
-      "gain": 248.57,
-      "pnl_pct": 3.428211267294834,
-      "win": 1,
-      "market_dir": "NA",
-      "market_ret_pct": 0.0,
-      "close_time": "09:45:16",
-      "open_time": "09:44:22",
-      "hold_minutes": 0.9
-    },
-    {
-      "date": "2026-08-18",
-      "instrument": "SPX Aug 18 '26 $7695 Call",
-      "action": "Sell To Close",
-      "type": "CALL",
-      "quantity": 1.0,
-      "cost": 400.72,
-      "proceeds": 89.28,
-      "gain": -311.43,
-      "pnl_pct": -77.7176083050509,
-      "win": 0,
-      "market_dir": "NA",
-      "market_ret_pct": 0.0,
-      "close_time": "15:57:32",
-      "open_time": "15:51:14",
-      "hold_minutes": 6.3
-    },
     {
       "date": "2026-08-19",
       "instrument": "AVGO Aug 19 '26 $362.5 Put",
