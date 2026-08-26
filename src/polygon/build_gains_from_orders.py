@@ -1,7 +1,7 @@
 """
 Build gainsandlosses_enriched.csv from Orders.csv by reconstructing closed option trades.
 
-This creates a calendar-compatible CSV with columns expected by pnl_calendar.html:
+This creates a calendar-compatible CSV with columns expected by large_cap_pnl.html:
 - close_date, instrument, quantity, total_cost, proceeds, gain, cost_per_share, etc.
 """
 

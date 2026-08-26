@@ -8,7 +8,7 @@ alwaysApply: false
 
 When `Orders.csv` is updated or the user asks to refresh dashboards / “orders live”:
 
-**Defaults for this large-cap book:** same-day trades only, start date **2026-08-19** (unless the user asks otherwise). Calendar title: **Large Cap P/L Calendar**.
+**Defaults for this large-cap book:** same-day trades only, start date **2026-08-19** (unless the user asks otherwise). Calendar file/title: **`large_cap_pnl.html`** / **Large Cap P/L Calendar**.
 
 1. **Enriched trades CSV** (repo root):
    ```bash
@@ -19,7 +19,7 @@ When `Orders.csv` is updated or the user asks to refresh dashboards / “orders 
      --from-date 2026-08-19
    ```
 2. **Tradezilla JSON**: run `python3 src/polygon/build_trade_dashboard_data.py` with `--trades_csv gainsandlosses_enriched.csv` → `trade_dashboard_data.json` (uses `src/polygon/data/polygon` for SPY day direction when present).
-3. **Serve**: `python3 scripts/serve_pnl_calendar.py` from repo root — `pnl_calendar.html` / `large_cap_pnl_calendar.html` (standalone with embedded CSV) and `tradezilla_dashboard.html`.
+3. **Serve**: `python3 scripts/serve_pnl_calendar.py` from repo root — open `http://localhost:8000/large_cap_pnl.html` and `tradezilla_dashboard.html`.
 
 **Shortcuts (repo root):** `npm run orders:refresh` — rebuild only (already passes same-day + from-date); `npm run orders:live` — rebuild then `pnl:serve`.
 

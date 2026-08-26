@@ -7,7 +7,7 @@ from pathlib import Path
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Serve pnl_calendar.html locally.")
+    parser = argparse.ArgumentParser(description="Serve Large Cap P/L calendar locally.")
     parser.add_argument(
         "--port",
         type=int,
@@ -25,20 +25,20 @@ def main() -> None:
     root = Path(__file__).resolve().parents[1]
 
     class Handler(http.server.SimpleHTTPRequestHandler):
-        # Serve from repo root so pnl_calendar.html can fetch ./gainsandlosses.csv
+        # Serve from repo root so large_cap_pnl.html can fetch ./gainsandlosses_enriched.csv
         def __init__(self, *a, **kw):
             super().__init__(*a, directory=str(root), **kw)
 
     class Server(socketserver.TCPServer):
         allow_reuse_address = True
 
-    print("Serving P/L calendar from:", root)
+    print("Serving Large Cap P/L calendar from:", root)
 
     last_err: Exception | None = None
     for port in range(args.port, args.port + 20):
         try:
             with Server((args.host, port), Handler) as httpd:
-                print(f"Open: http://localhost:{port}/pnl_calendar.html")
+                print(f"Open: http://localhost:{port}/large_cap_pnl.html")
                 httpd.serve_forever()
                 return
         except Exception as e:  # noqa: BLE001 - want to try multiple ports
