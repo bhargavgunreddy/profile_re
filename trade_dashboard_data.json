@@ -1,14 +1,14 @@
 {
-  "generated_at": "2026-08-26T17:35:53.653205",
+  "generated_at": "2026-08-27T14:21:37.996256",
   "source_csv": "gainsandlosses_enriched.csv",
   "kpis": {
-    "trades": 58,
-    "total_pnl": -1299.24,
-    "win_rate": 67.24137931034483,
-    "avg_win": 103.2802564102564,
-    "avg_loss": -280.3773684210526,
-    "profit_factor": 0.756110655376119,
-    "expectancy": -22.400689655172414
+    "trades": 65,
+    "total_pnl": -786.6800000000002,
+    "win_rate": 69.23076923076923,
+    "avg_win": 103.376,
+    "avg_loss": -271.93,
+    "profit_factor": 0.8553524804177546,
+    "expectancy": -12.10276923076924
   },
   "equity_curve": [
     {
@@ -38,16 +38,21 @@
     },
     {
       "date": "2026-08-26",
-      "cum_pnl": -1299.2399999999993,
-      "day_pnl": -197.30000000000007
+      "cum_pnl": -1295.6699999999994,
+      "day_pnl": -193.73000000000008
+    },
+    {
+      "date": "2026-08-27",
+      "cum_pnl": -786.6799999999994,
+      "day_pnl": 508.98999999999995
     }
   ],
   "monthly": [
     {
       "month": "2026-08",
-      "pnl": -1299.2400000000018,
-      "trades": 58,
-      "win_rate": 67.24137931034483
+      "pnl": -786.680000000002,
+      "trades": 65,
+      "win_rate": 69.23076923076923
     }
   ],
   "weekday": [
@@ -65,15 +70,15 @@
     },
     {
       "weekday": "Wed",
-      "pnl": 104.25999999999988,
-      "trades": 18,
-      "win_rate": 61.111111111111114
+      "pnl": 107.82999999999987,
+      "trades": 19,
+      "win_rate": 63.1578947368421
     },
     {
       "weekday": "Thu",
-      "pnl": 754.8400000000001,
-      "trades": 11,
-      "win_rate": 81.81818181818183
+      "pnl": 1263.83,
+      "trades": 17,
+      "win_rate": 82.35294117647058
     },
     {
       "weekday": "Fri",
@@ -111,9 +116,9 @@
   "time_of_day": [
     {
       "label": "09:30-10:00",
-      "pnl": 2196.7900000000013,
-      "trades": 38,
-      "win_rate": 81.57894736842105
+      "pnl": 2705.780000000002,
+      "trades": 44,
+      "win_rate": 81.81818181818183
     },
     {
       "label": "10:00-11:30",
@@ -141,29 +146,29 @@
     },
     {
       "label": "15:45-16:00",
-      "pnl": 0.0,
-      "trades": 0,
-      "win_rate": 0.0
+      "pnl": 3.57,
+      "trades": 1,
+      "win_rate": 100.0
     }
   ],
   "hold_time": [
     {
       "label": "0-2 min",
-      "pnl": 1246.4099999999999,
-      "trades": 13,
-      "win_rate": 92.3076923076923
+      "pnl": 1567.1199999999997,
+      "trades": 16,
+      "win_rate": 93.75
     },
     {
       "label": "2-5 min",
-      "pnl": 764.5400000000002,
-      "trades": 13,
-      "win_rate": 84.61538461538461
+      "pnl": 886.6800000000002,
+      "trades": 15,
+      "win_rate": 86.66666666666667
     },
     {
       "label": "5-15 min",
-      "pnl": 935.8299999999992,
-      "trades": 19,
-      "win_rate": 73.68421052631578
+      "pnl": 1005.5399999999992,
+      "trades": 21,
+      "win_rate": 71.42857142857143
     },
     {
       "label": "15-30 min",
@@ -187,17 +192,17 @@
   "qty_buckets": [
     {
       "label": "1 ct",
-      "pnl": -1503.080000000002,
-      "trades": 56,
-      "win_rate": 66.07142857142857,
-      "avg_pnl": -26.84071428571432
+      "pnl": -1171.6600000000024,
+      "trades": 62,
+      "win_rate": 67.74193548387096,
+      "avg_pnl": -18.89774193548391
     },
     {
       "label": "2 ct",
-      "pnl": 193.14,
-      "trades": 1,
+      "pnl": 374.28,
+      "trades": 2,
       "win_rate": 100.0,
-      "avg_pnl": 193.14
+      "avg_pnl": 187.14
     },
     {
       "label": "3-5 ct",
@@ -224,6 +229,23 @@
       "close_time": "09:51:11",
       "open_time": "09:37:21",
       "hold_minutes": 13.8
+    },
+    {
+      "date": "2026-08-27",
+      "instrument": "LITE Aug 28 '26 $960 Call",
+      "action": "Sell To Close",
+      "type": "CALL",
+      "quantity": 1.0,
+      "cost": 2530.72,
+      "proceeds": 2819.28,
+      "gain": 288.57,
+      "pnl_pct": 11.402683821205033,
+      "win": 1,
+      "market_dir": "NA",
+      "market_ret_pct": 0.0,
+      "close_time": "09:31:40",
+      "open_time": "09:30:49",
+      "hold_minutes": 0.8
     },
     {
       "date": "2026-08-24",
@@ -275,6 +297,23 @@
       "close_time": "10:05:47",
       "open_time": "09:45:25",
       "hold_minutes": 20.4
+    },
+    {
+      "date": "2026-08-27",
+      "instrument": "NVDA Aug 28 '26 $225 Call",
+      "action": "Sell To Close",
+      "type": "CALL",
+      "quantity": 2.0,
+      "cost": 417.43,
+      "proceeds": 598.57,
+      "gain": 181.14,
+      "pnl_pct": 43.394102005126605,
+      "win": 1,
+      "market_dir": "NA",
+      "market_ret_pct": 0.0,
+      "close_time": "09:40:37",
+      "open_time": "09:34:36",
+      "hold_minutes": 6.0
     },
     {
       "date": "2026-08-24",
@@ -343,40 +382,6 @@
       "close_time": "09:58:15",
       "open_time": "09:56:46",
       "hold_minutes": 1.5
-    },
-    {
-      "date": "2026-08-21",
-      "instrument": "LITE Aug 21 '26 $900 Call",
-      "action": "Sell To Close",
-      "type": "CALL",
-      "quantity": 1.0,
-      "cost": 1490.72,
-      "proceeds": 1649.28,
-      "gain": 158.57,
-      "pnl_pct": 10.637141783835997,
-      "win": 1,
-      "market_dir": "NA",
-      "market_ret_pct": 0.0,
-      "close_time": "09:45:11",
-      "open_time": "09:35:26",
-      "hold_minutes": 9.8
-    },
-    {
-      "date": "2026-08-26",
-      "instrument": "LLY Aug 28 '26 $1195 Put",
-      "action": "Sell To Close",
-      "type": "PUT",
-      "quantity": 1.0,
-      "cost": 1640.72,
-      "proceeds": 1799.28,
-      "gain": 158.57,
-      "pnl_pct": 9.664659417816567,
-      "win": 1,
-      "market_dir": "NA",
-      "market_ret_pct": 0.0,
-      "close_time": "09:42:06",
-      "open_time": "09:40:21",
-      "hold_minutes": 1.8
     }
   ],
   "biggest_losses": [
@@ -1472,6 +1477,23 @@
     },
     {
       "date": "2026-08-26",
+      "instrument": "MRNA Aug 28 '26 $177.5 Call",
+      "action": "Sell To Close",
+      "type": "CALL",
+      "quantity": 1.0,
+      "cost": 33.72,
+      "proceeds": 37.28,
+      "gain": 3.57,
+      "pnl_pct": 10.587188612099643,
+      "win": 1,
+      "market_dir": "NA",
+      "market_ret_pct": 0.0,
+      "close_time": "15:55:04",
+      "open_time": "15:54:37",
+      "hold_minutes": 0.5
+    },
+    {
+      "date": "2026-08-26",
       "instrument": "ORCL Aug 28 '26 $150 Call",
       "action": "Sell To Close",
       "type": "CALL",
@@ -1537,6 +1559,108 @@
       "close_time": "10:00:13",
       "open_time": "09:55:50",
       "hold_minutes": 4.4
+    },
+    {
+      "date": "2026-08-27",
+      "instrument": "CRWD Aug 28 '26 $215 Call",
+      "action": "Sell To Close",
+      "type": "CALL",
+      "quantity": 1.0,
+      "cost": 440.72,
+      "proceeds": 524.28,
+      "gain": 83.57,
+      "pnl_pct": 18.962152840805953,
+      "win": 1,
+      "market_dir": "NA",
+      "market_ret_pct": 0.0,
+      "close_time": "09:35:16",
+      "open_time": "09:32:50",
+      "hold_minutes": 2.4
+    },
+    {
+      "date": "2026-08-27",
+      "instrument": "LITE Aug 28 '26 $960 Call",
+      "action": "Sell To Close",
+      "type": "CALL",
+      "quantity": 1.0,
+      "cost": 2530.72,
+      "proceeds": 2819.28,
+      "gain": 288.57,
+      "pnl_pct": 11.402683821205033,
+      "win": 1,
+      "market_dir": "NA",
+      "market_ret_pct": 0.0,
+      "close_time": "09:31:40",
+      "open_time": "09:30:49",
+      "hold_minutes": 0.8
+    },
+    {
+      "date": "2026-08-27",
+      "instrument": "NBIS Aug 28 '26 $225 Call",
+      "action": "Sell To Close",
+      "type": "CALL",
+      "quantity": 1.0,
+      "cost": 585.72,
+      "proceeds": 474.28,
+      "gain": -111.43,
+      "pnl_pct": -19.024448541965445,
+      "win": 0,
+      "market_dir": "NA",
+      "market_ret_pct": 0.0,
+      "close_time": "09:42:32",
+      "open_time": "09:33:15",
+      "hold_minutes": 9.3
+    },
+    {
+      "date": "2026-08-27",
+      "instrument": "NVDA Aug 28 '26 $225 Call",
+      "action": "Sell To Close",
+      "type": "CALL",
+      "quantity": 2.0,
+      "cost": 417.43,
+      "proceeds": 598.57,
+      "gain": 181.14,
+      "pnl_pct": 43.394102005126605,
+      "win": 1,
+      "market_dir": "NA",
+      "market_ret_pct": 0.0,
+      "close_time": "09:40:37",
+      "open_time": "09:34:36",
+      "hold_minutes": 6.0
+    },
+    {
+      "date": "2026-08-27",
+      "instrument": "OKTA Aug 28 '26 $160 Call",
+      "action": "Sell To Close",
+      "type": "CALL",
+      "quantity": 1.0,
+      "cost": 490.72,
+      "proceeds": 529.28,
+      "gain": 38.57,
+      "pnl_pct": 7.859879360939027,
+      "win": 1,
+      "market_dir": "NA",
+      "market_ret_pct": 0.0,
+      "close_time": "09:40:49",
+      "open_time": "09:36:30",
+      "hold_minutes": 4.3
+    },
+    {
+      "date": "2026-08-27",
+      "instrument": "OKTA Aug 28 '26 $165 Put",
+      "action": "Sell To Close",
+      "type": "PUT",
+      "quantity": 1.0,
+      "cost": 440.72,
+      "proceeds": 469.28,
+      "gain": 28.57,
+      "pnl_pct": 6.482573969867489,
+      "win": 1,
+      "market_dir": "NA",
+      "market_ret_pct": 0.0,
+      "close_time": "09:46:38",
+      "open_time": "09:46:01",
+      "hold_minutes": 0.6
     }
   ]
 }
