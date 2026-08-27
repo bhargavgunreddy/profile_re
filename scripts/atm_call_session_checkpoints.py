@@ -345,11 +345,13 @@ def main() -> int:
             "strike": "",
             "option_symbol": "",
             "opt_935": "",
+            "opt_945": "",
             "opt_1230": "",
             "opt_1530": "",
             "opt_1230_bar": "",
             "opt_1530_bar": "",
             "pct_935_to_1230": "",
+            "pct_945_to_1230": "",
             "pct_935_to_1530": "",
             "notes": "",
         }
@@ -397,6 +399,10 @@ def main() -> int:
                 p935 = opt5.get("09:30")
                 if p935 is None:
                     p935 = opt15.get("09:30")
+                # 5m candle ending 09:45 starts at 09:40
+                p945 = opt5.get("09:40")
+                if p945 is None:
+                    p945, _ = checkpoint_close(opt5, opt15, "09:45")
                 p1230, src1230 = checkpoint_close(opt5, opt15, "12:30")
                 p1530, src1530 = checkpoint_close(opt5, opt15, "15:30")
                 last_cand = (chosen, kind) == candidates[-1]
@@ -423,6 +429,8 @@ def main() -> int:
                         row["notes"] = f"9:35 used {src935}"
                 if p935 is not None:
                     row["opt_935"] = round(p935, 4)
+                if p945 is not None:
+                    row["opt_945"] = round(p945, 4)
                 row["opt_1230_bar"] = src1230
                 row["opt_1530_bar"] = src1530
                 if p1230 is not None:
@@ -431,6 +439,8 @@ def main() -> int:
                     row["opt_1530"] = round(p1530, 4)
                 if p935 and p1230 is not None:
                     row["pct_935_to_1230"] = round(100.0 * (p1230 / p935 - 1.0), 1)
+                if p945 and p1230 is not None:
+                    row["pct_945_to_1230"] = round(100.0 * (p1230 / p945 - 1.0), 1)
                 if p935 and p1530 is not None:
                     row["pct_935_to_1530"] = round(100.0 * (p1530 / p935 - 1.0), 1)
                 last = contract.get("lastPrice")
@@ -460,7 +470,7 @@ def main() -> int:
         print(
             f"{r['ticker']:6} spot={r['spot_935']!s:>8} {r['expiry_kind']:11} "
             f"{r['expiry']} K={r['strike']!s:>7}  "
-            f"12:30={r['opt_1230']!s:>7}  3:30={r['opt_1530']!s:>7}  {r['notes']}"
+            f"9:45={r['opt_945']!s:>7}  12:30={r['opt_1230']!s:>7}  {r['notes']}"
         )
     return 0
 
