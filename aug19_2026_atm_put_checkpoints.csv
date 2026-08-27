@@ -1,0 +1,16 @@
+ticker,session,right,spot_935,expiry,expiry_kind,strike,option_symbol,opt_935,opt_1230,opt_1530,opt_1230_bar,opt_1530_bar,pct_935_to_1230,pct_935_to_1530,notes
+VICR,2026-08-19,put,238.915,2026-09-18,next_month,240.0,VICR260918P00240000,,,,no bar,no bar,,,no 12:30/3:30 bars; chain lastPrice=36.96; tried this_week:2026-08-21(no 12:30/3:30)
+NBIS,2026-08-19,put,232.315,2026-08-21,this_week,232.5,NBIS260821P00232500,8.91,9.65,18.0,15m 12:15-12:30,15m 15:30-15:45,8.3,102.0,
+MOG.B,2026-08-19,put,,,,,,,,,,,,,missing 09:30-09:35 5m stock bar
+SITM,2026-08-19,put,682.32,2026-08-21,this_week,680.0,SITM260821P00680000,,44.0,59.0,15m 12:15-12:30,15m 15:30-15:45,,,
+MTSI,2026-08-19,put,294.55,2026-09-18,next_month,290.0,MTSI260918P00290000,,,,no bar,no bar,,,no 12:30/3:30 bars; chain lastPrice=30.27; tried this_week:2026-08-21(no 12:30/3:30)
+STX,2026-08-19,put,894.46,2026-09-18,next_month,890.0,STX260918P00890000,,,,no bar,no bar,,,no 12:30/3:30 bars; chain lastPrice=92.7; tried this_week:2026-08-21(no 12:30/3:30)
+TTMI,2026-08-19,put,124.565,2026-08-21,this_week,125.0,TTMI260821P00125000,,9.0,10.18,15m 12:15-12:30,15m 15:15-15:30,,,
+SMTC,2026-08-19,put,136.5,2026-09-18,next_month,135.0,SMTC260918P00135000,,,,no bar,no bar,,,no 12:30/3:30 bars; chain lastPrice=19.05; tried this_week:2026-08-21(no 12:30/3:30)
+STLD,2026-08-19,put,249.105,2026-09-18,next_month,250.0,STLD260918P00250000,9.05,,,no bar,no bar,,,no 12:30/3:30 bars; chain lastPrice=15.7; tried this_week:2026-08-21(no 12:30/3:30)
+VIK,2026-08-19,put,98.345,2026-08-21,this_week,100.0,VIK260821P00100000,2.83,4.52,7.9,5m 12:25-12:30,15m 15:15-15:30,59.7,179.2,
+AMKR,2026-08-19,put,54.475,2026-09-18,next_month,55.0,AMKR260918P00055000,5.0,6.19,6.5,15m 12:15-12:30,5m 15:25-15:30,23.8,30.0,fell back after this_week:2026-08-21(no 12:30/3:30)
+AAOI,2026-08-19,put,134.4932,2026-09-18,next_month,135.0,AAOI260918P00135000,15.73,,,no bar,no bar,,,no 12:30/3:30 bars; chain lastPrice=21.0; tried this_week:2026-08-21(no 12:30/3:30)
+ZTO,2026-08-19,put,21.83,2026-08-21,this_week,22.0,ZTO260821P00022000,0.4,0.65,,15m 12:15-12:30,no bar,62.5,,
+DOCN,2026-08-19,put,122.56,2026-08-21,this_week,123.0,DOCN260821P00123000,,,7.75,no bar,15m 15:15-15:30,,,
+TOTAL,2026-08-19,put,3284.4332,,13 names,3277.5,,41.92,74.01,109.33,,,22.6,93.5,Sums skip blanks. Pct totals are paired-premium change. MOG.B excluded from spot/strike (no 9:35 bar).
