@@ -45,8 +45,10 @@ Read this file for the full system. Key rules:
 See `.cursor/rules/orders-dashboard-refresh.mdc` for the build steps. Short version:
 1. `python3 src/polygon/build_gains_from_orders.py` — Orders.csv → gainsandlosses_enriched.csv
 2. `python3 src/polygon/build_trade_dashboard_data.py` — enriched CSV → trade_dashboard_data.json
-3. `python3 scripts/serve_pnl_calendar.py` — serves pnl_calendar.html + tradezilla_dashboard.html
+3. `python3 scripts/serve_pnl_calendar.py` — serves large_cap_pnl.html + tradezilla_dashboard.html
 4. Shortcut: `npm run orders:live` (rebuild + serve) or `npm run orders:refresh` (rebuild only)
+
+Default Large Cap rebuild filters: `--same-day-only --from-date 2026-08-19`.
 
 ## Compliance review pattern
 

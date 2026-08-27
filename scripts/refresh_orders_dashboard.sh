@@ -11,8 +11,12 @@ for a in "$@"; do
   if [[ "$a" == "--no-serve" ]]; then SERVE=0; fi
 done
 
-echo "==> Building gainsandlosses_enriched.csv from Orders.csv"
-python3 src/polygon/build_gains_from_orders.py --orders_csv Orders.csv --out_csv gainsandlosses_enriched.csv
+echo "==> Building gainsandlosses_enriched.csv from Orders.csv (same-day trades from 2026-08-19)"
+python3 src/polygon/build_gains_from_orders.py \
+  --orders_csv Orders.csv \
+  --out_csv gainsandlosses_enriched.csv \
+  --same-day-only \
+  --from-date 2026-08-19
 
 echo "==> Building trade_dashboard_data.json from gainsandlosses_enriched.csv"
 python3 src/polygon/build_trade_dashboard_data.py \
@@ -26,6 +30,6 @@ if [[ "$SERVE" -eq 0 ]]; then
 fi
 
 echo "==> Starting static server (Ctrl+C to stop)"
-echo "    P/L calendar:  http://localhost:8000/pnl_calendar.html"
+echo "    Large Cap P/L: http://localhost:8000/large_cap_pnl.html"
 echo "    Tradezilla:    http://localhost:8000/tradezilla_dashboard.html"
 exec python3 scripts/serve_pnl_calendar.py

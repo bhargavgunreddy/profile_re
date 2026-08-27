@@ -56,6 +56,6 @@ if [[ "$SERVE" -eq 0 ]]; then
 fi
 
 echo "==> Starting static server (Ctrl+C to stop)"
-echo "    P/L calendar:  http://localhost:8000/pnl_calendar.html"
+echo "    Large Cap P/L: http://localhost:8000/large_cap_pnl.html"
 echo "    Tradezilla:    http://localhost:8000/tradezilla_dashboard.html"
 exec python3 scripts/serve_pnl_calendar.py
