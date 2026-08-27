@@ -1,0 +1,14 @@
+ticker,session,right,spot_935,expiry,expiry_kind,strike,option_symbol,opt_935,opt_1230,opt_1530,opt_1230_bar,opt_1530_bar,pct_935_to_1230,pct_935_to_1530,notes
+OKTA,2026-08-27,call,163.94,2026-08-28,this_week,165.0,OKTA260828C00165000,3.6,6.7,,15m 12:15-12:30,no bar,86.1,,
+VEEV,2026-08-27,call,281.88,2026-09-18,this_month,280.0,VEEV260918C00280000,12.6,,,no bar,no bar,,,no 12:30/3:30 bars yet; chain lastPrice=14.98
+CRM,2026-08-27,call,235.15,2026-08-28,this_week,235.0,CRM260828C00235000,4.45,12.67,,15m 12:15-12:30,no bar,184.7,,
+CRWD,2026-08-27,call,216.7744,2026-08-28,this_week,217.5,CRWD260828C00217500,4.25,6.35,,15m 12:22 (t-8m),no bar,49.4,,
+NTNX,2026-08-27,call,72.505,2026-09-18,this_month,72.5,NTNX260918C00072500,3.28,2.13,,15m 12:13 (t-17m),no bar,-35.1,,
+PANW,2026-08-27,call,367.26,2026-08-28,this_week,367.5,PANW260828C00367500,2.82,15.0,,15m 12:11 (t-19m),no bar,431.9,,
+SAIL,2026-08-27,call,19.5,2026-09-18,this_month,20.0,SAIL260918C00020000,1.49,,,no bar,no bar,,,no 12:30/3:30 bars yet; chain lastPrice=2.1
+DOCN,2026-08-27,call,123.43,2026-08-28,this_week,123.0,DOCN260828C00123000,2.72,,,no bar,no bar,,,no 12:30/3:30 bars yet; chain lastPrice=2.25
+ZS,2026-08-27,call,182.33,2026-08-28,this_week,182.5,ZS260828C00182500,2.75,,,no bar,no bar,,,no 12:30/3:30 bars yet; chain lastPrice=5.49
+CRDO,2026-08-27,call,241.755,2026-08-28,this_week,242.5,CRDO260828C00242500,5.95,2.6,,15m 12:11 (t-19m),no bar,-56.3,,
+RBRK,2026-08-27,call,103.26,2026-08-28,this_week,103.0,RBRK260828C00103000,7.3,,,no bar,no bar,,,no 12:30/3:30 bars yet; chain lastPrice=7.6
+DDOG,2026-08-27,call,241.8422,2026-08-28,this_week,242.5,DDOG260828C00242500,6.25,4.0,,15m 12:10 (t-20m),no bar,-36.0,,
+TOTAL,2026-08-27,call,2249.6266,,12 names,2251.0,,57.46,49.45,,,,61.6,,Sums skip blanks. Pct total is paired-premium change on 7 names. 3:30 pending as of ~12:40 ET.

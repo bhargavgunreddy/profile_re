@@ -196,14 +196,20 @@ def next_third_friday(d: date) -> date:
     return third_friday(year, month)
 
 
-def ranked_expirations(exp_dates: list[date], session: date) -> list[tuple[date, str]]:
-    """0DTE, then this week's Friday, then this month, then next month — listed only."""
+def ranked_expirations(
+    exp_dates: list[date],
+    session: date,
+    *,
+    mode: str = "weekly_monthly",
+) -> list[tuple[date, str]]:
+    """Rank listed expiries.
+
+    mode=weekly_monthly: 0DTE, this week, this month, next month.
+    mode=closest: 0DTE, then nearest future listed expiry by date.
+    """
     if not exp_dates:
         return []
     listed = set(exp_dates)
-    weekly = friday_of_week(session)
-    monthly = next_third_friday(session)
-    nxt_month = next_third_friday(monthly + timedelta(days=1))
     ranked: list[tuple[date, str]] = []
     seen: set[date] = set()
 
@@ -213,6 +219,21 @@ def ranked_expirations(exp_dates: list[date], session: date) -> list[tuple[date,
             ranked.append((d, kind))
 
     add(session, "0DTE")
+    if mode == "closest":
+        for d in sorted(e for e in exp_dates if e > session):
+            days = (d - session).days
+            if days <= 7:
+                kind = "this_week"
+            elif d <= next_third_friday(session):
+                kind = "this_month"
+            else:
+                kind = "closest"
+            add(d, kind)
+        return ranked
+
+    weekly = friday_of_week(session)
+    monthly = next_third_friday(session)
+    nxt_month = next_third_friday(monthly + timedelta(days=1))
     add(weekly, "this_week")
     add(monthly, "this_month")
     add(nxt_month, "next_month")
@@ -279,10 +300,17 @@ def main() -> int:
     ap.add_argument("--right", choices=("call", "put"), default="call")
     ap.add_argument("--tickers", default="", help="Comma-separated tickers")
     ap.add_argument("--session", default="2026-08-19")
+    ap.add_argument(
+        "--expiry-mode",
+        choices=("weekly_monthly", "closest"),
+        default="weekly_monthly",
+        help="weekly_monthly=0DTE/week/month; closest=today then nearest listed expiry",
+    )
     ap.add_argument("--out", default="")
     args = ap.parse_args()
     session = date.fromisoformat(args.session)
     right = args.right
+    expiry_mode = args.expiry_mode
     tickers = (
         [t.strip().upper() for t in args.tickers.split(",") if t.strip()]
         if args.tickers.strip()
@@ -342,7 +370,7 @@ def main() -> int:
                 continue
             dated = unix_dates(result[0].get("expirationDates") or [])
             exp_dates = [d for _, d in dated]
-            candidates = ranked_expirations(exp_dates, session)
+            candidates = ranked_expirations(exp_dates, session, mode=expiry_mode)
             if not candidates:
                 row["notes"] = "no usable expiration"
                 rows.append(row)
@@ -372,7 +400,15 @@ def main() -> int:
                 p1230, src1230 = checkpoint_close(opt5, opt15, "12:30")
                 p1530, src1530 = checkpoint_close(opt5, opt15, "15:30")
                 last_cand = (chosen, kind) == candidates[-1]
-                if kind != "0DTE" and p1230 is None and p1530 is None and not last_cand:
+                # In closest mode, lock the nearest listed expiry even if thin.
+                # Otherwise keep falling through until a 12:30/3:30 print appears.
+                if (
+                    expiry_mode != "closest"
+                    and kind != "0DTE"
+                    and p1230 is None
+                    and p1530 is None
+                    and not last_cand
+                ):
                     tried.append(f"{kind}:{chosen.isoformat()}(no 12:30/3:30)")
                     continue
 
@@ -380,6 +416,11 @@ def main() -> int:
                 row["expiry_kind"] = kind
                 row["strike"] = float(contract["strike"])
                 row["option_symbol"] = opt_sym
+                if p935 is None:
+                    p935_alt, src935 = checkpoint_close(opt5, opt15, "09:35")
+                    if p935_alt is not None:
+                        p935 = p935_alt
+                        row["notes"] = f"9:35 used {src935}"
                 if p935 is not None:
                     row["opt_935"] = round(p935, 4)
                 row["opt_1230_bar"] = src1230
@@ -392,18 +433,18 @@ def main() -> int:
                     row["pct_935_to_1230"] = round(100.0 * (p1230 / p935 - 1.0), 1)
                 if p935 and p1530 is not None:
                     row["pct_935_to_1530"] = round(100.0 * (p1530 / p935 - 1.0), 1)
+                last = contract.get("lastPrice")
                 if p1230 is None and p1530 is None:
-                    last = contract.get("lastPrice")
                     extra = f"; tried {', '.join(tried)}" if tried else ""
-                    row["notes"] = (
-                        f"no 12:30/3:30 bars; chain lastPrice={last}{extra}"
-                    )
+                    note = f"no 12:30/3:30 bars yet; chain lastPrice={last}{extra}"
+                    row["notes"] = f"{row['notes']}; {note}" if row["notes"] else note
                 elif tried:
-                    row["notes"] = f"fell back after {', '.join(tried)}"
+                    note = f"fell back after {', '.join(tried)}"
+                    row["notes"] = f"{row['notes']}; {note}" if row["notes"] else note
                 filled = True
                 break
             if not filled:
-                row["notes"] = f"no weekly/monthly {noun} with bars; tried " + ", ".join(tried)
+                row["notes"] = f"no listed {noun} with contracts; tried " + ", ".join(tried)
         except Exception as e:
             row["notes"] = f"error: {type(e).__name__}: {e}"
         rows.append(row)
