@@ -344,6 +344,7 @@ def main() -> int:
             "expiry_kind": "",
             "strike": "",
             "option_symbol": "",
+            "opt_932": "",
             "opt_935": "",
             "opt_945": "",
             "opt_1230": "",
@@ -396,13 +397,25 @@ def main() -> int:
                 opt_sym = str(contract.get("contractSymbol") or "")
                 opt5 = parse_chart(fetch_bars(opener, opt_sym, "5m"), session)
                 opt15 = parse_chart(fetch_bars(opener, opt_sym, "15m"), session)
+                opt1 = parse_chart(fetch_bars(opener, opt_sym, "1m"), session)
+                p932 = opt1.get("09:32")
+                if p932 is None:
+                    # nearest 1m print within ±2 minutes of 09:32
+                    for alt in ("09:31", "09:33", "09:30", "09:34"):
+                        if alt in opt1:
+                            p932 = opt1[alt]
+                            break
                 p935 = opt5.get("09:30")
                 if p935 is None:
                     p935 = opt15.get("09:30")
+                if p935 is None:
+                    p935 = opt1.get("09:35")
                 # 5m candle ending 09:45 starts at 09:40
                 p945 = opt5.get("09:40")
                 if p945 is None:
                     p945, _ = checkpoint_close(opt5, opt15, "09:45")
+                if p945 is None:
+                    p945 = opt1.get("09:45")
                 p1230, src1230 = checkpoint_close(opt5, opt15, "12:30")
                 p1530, src1530 = checkpoint_close(opt5, opt15, "15:30")
                 last_cand = (chosen, kind) == candidates[-1]
@@ -427,6 +440,8 @@ def main() -> int:
                     if p935_alt is not None:
                         p935 = p935_alt
                         row["notes"] = f"9:35 used {src935}"
+                if p932 is not None:
+                    row["opt_932"] = round(p932, 4)
                 if p935 is not None:
                     row["opt_935"] = round(p935, 4)
                 if p945 is not None:
@@ -468,9 +483,9 @@ def main() -> int:
     print(f"wrote {out} rows={len(rows)}")
     for r in rows:
         print(
-            f"{r['ticker']:6} spot={r['spot_935']!s:>8} {r['expiry_kind']:11} "
-            f"{r['expiry']} K={r['strike']!s:>7}  "
-            f"9:45={r['opt_945']!s:>7}  12:30={r['opt_1230']!s:>7}  {r['notes']}"
+            f"{r['ticker']:6} spot={r['spot_935']!s:>8} K={r['strike']!s:>7}  "
+            f"9:32={r['opt_932']!s:>6} 9:35={r['opt_935']!s:>6} "
+            f"9:45={r['opt_945']!s:>6} 12:30={r['opt_1230']!s:>6}  {r['notes']}"
         )
     return 0
 
