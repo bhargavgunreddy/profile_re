@@ -72,6 +72,7 @@ PUT_TICKERS = [
 # Yahoo equity symbols that differ from the user's ticker spelling.
 YAHOO_SYMBOL = {
     "MOG.B": "MOG-B",
+    "BF.B": "BF-B",
 }
 
 
@@ -319,7 +320,12 @@ def main() -> int:
     # Keep user's mixed-case / class-share spelling for MOG.B
     if args.tickers.strip():
         tickers = [t.strip() for t in args.tickers.split(",") if t.strip()]
-        tickers = [t.upper() if t.upper() != "MOG.B" else "MOG.B" for t in tickers]
+        preserve = {"MOG.B", "BF.B"}
+        tickers = [
+            t.upper() if t.upper() not in preserve and t not in preserve else t.upper().replace("BF.B", "BF.B")
+            for t in tickers
+        ]
+        tickers = [("BF.B" if t.upper() == "BF.B" else ("MOG.B" if t.upper() == "MOG.B" else t.upper())) for t in tickers]
     out = Path(
         args.out
         or (
