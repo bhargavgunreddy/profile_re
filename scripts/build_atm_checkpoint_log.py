@@ -104,6 +104,24 @@ SESSIONS = [
             ("pct_935_to_1230", "9:35→12:30"),
         ],
     },
+    {
+        "id": "sep3-calls",
+        "title": "Sep 3, 2026 — ATM Calls (17 names)",
+        "file": "sep3_2026_atm_call_checkpoints.csv",
+        "right": "call",
+        "blurb": "SNOW, HOOD, CRCL, SMMT, MSTR, BMNR, COIN, CLS, PLTR, TSLA, RBRK, SPCX, NOW, ORCL, SAIL, HL, CRWD. Closest expiry.",
+        "cols": [
+            ("ticker", "Ticker"),
+            ("expiry", "Expiry"),
+            ("spot_935", "9:35 stock"),
+            ("strike", "Strike"),
+            ("opt_932", "Call 9:32"),
+            ("opt_935", "Call 9:35"),
+            ("opt_945", "Call 9:45"),
+            ("opt_1230", "Call 12:30"),
+            ("pct_935_to_1230", "9:35→12:30"),
+        ],
+    },
 ]
 
 
