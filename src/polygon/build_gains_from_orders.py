@@ -57,7 +57,7 @@ def parse_fill(fill: str) -> tuple[int, float] | None:
 
 def parse_desc(desc: str) -> dict | None:
     pat = re.compile(
-        r"^(Buy|Sell)\s+(\d+)\s+([A-Za-z]{3})-(\d{2})-(\d{2})\s+(\d+)\s+(Call|Put)s?\s+@\s+([0-9.]+|Market)\s+.*?\bto\s+(Open|Close)\b",
+        r"^(Buy|Sell)\s+(\d+)\s+([A-Za-z]{3})-(\d{2})-(\d{2})\s+(\d+(?:\.\d+)?)\s+(Call|Put)s?\s+@\s+([0-9.]+|Market)\s+.*?\bto\s+(Open|Close)\b",
         re.IGNORECASE,
     )
     m = pat.search((desc or "").strip())
@@ -98,6 +98,11 @@ def main() -> None:
     ap.add_argument("--out_csv", default="gainsandlosses_enriched.csv")
     ap.add_argument("--commission", type=float, default=0.65, help="Per-contract commission (default $0.65)")
     ap.add_argument("--reg_fee", type=float, default=0.066, help="Per-contract regulatory fees (default $0.066)")
+    ap.add_argument(
+        "--min_close_date",
+        default="",
+        help="Keep only reconstructed trades with close_date on/after YYYY-MM-DD",
+    )
     args = ap.parse_args()
     fee_per_contract = args.commission + args.reg_fee
 
@@ -268,6 +273,9 @@ def main() -> None:
         )
 
     out_rows.sort(key=lambda r: (r["close_date"], r["instrument"]))
+    min_close = (args.min_close_date or "").strip()
+    if min_close:
+        out_rows = [r for r in out_rows if (r.get("close_date") or "") >= min_close]
 
     fields = [
         "account",

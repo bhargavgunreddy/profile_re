@@ -1,18 +1,23 @@
 #!/usr/bin/env bash
 # Rebuild gains CSV + trade dashboard JSON from Orders.csv; optionally serve HTML dashboards.
 #   bash scripts/refresh_orders_dashboard.sh           # rebuild + serve (same as npm run orders:live)
-#   bash scripts/refresh_orders_dashboard.sh --no-serve   # rebuild only (same as npm run orders:refresh)
+#   bash scripts/refresh_orders_dashboard.sh --no-serve --min_close_date 2026-08-19
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 
 SERVE=1
+BUILD_ARGS=()
 for a in "$@"; do
-  if [[ "$a" == "--no-serve" ]]; then SERVE=0; fi
+  if [[ "$a" == "--no-serve" ]]; then
+    SERVE=0
+  else
+    BUILD_ARGS+=("$a")
+  fi
 done
 
 echo "==> Building gainsandlosses_enriched.csv from Orders.csv"
-python3 src/polygon/build_gains_from_orders.py --orders_csv Orders.csv --out_csv gainsandlosses_enriched.csv
+python3 src/polygon/build_gains_from_orders.py --orders_csv Orders.csv --out_csv gainsandlosses_enriched.csv "${BUILD_ARGS[@]}"
 
 echo "==> Building trade_dashboard_data.json from gainsandlosses_enriched.csv"
 python3 src/polygon/build_trade_dashboard_data.py \

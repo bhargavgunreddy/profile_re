@@ -1179,6 +1179,20 @@
         updateSubhead();
       });
 
+      (function applyDateQueryParams() {
+        const p = new URLSearchParams(window.location.search);
+        const fromQ = (p.get("from") || "").trim();
+        const toQ = (p.get("to") || "").trim();
+        if (fromQ && document.getElementById("dateFrom")) {
+          document.getElementById("dateFrom").value = fromQ;
+          dateFrom = fromQ;
+        }
+        if (toQ && document.getElementById("dateTo")) {
+          document.getElementById("dateTo").value = toQ;
+          dateTo = toQ;
+        }
+      })();
+
       // Initial render
       reload();
     </script>
