@@ -122,6 +122,24 @@ SESSIONS = [
             ("pct_935_to_1230", "9:35→12:30"),
         ],
     },
+    {
+        "id": "sep4-calls",
+        "title": "Sep 4, 2026 — ATM Calls (15 names)",
+        "file": "sep4_2026_atm_call_checkpoints.csv",
+        "right": "call",
+        "blurb": "ALAB, CBRS, SOXL, SNDK, MU, INTC, SKHY, ORCL, MRVL, BE, KLAC, TSEM, COHR, SMCI, FIVE. Closest expiry.",
+        "cols": [
+            ("ticker", "Ticker"),
+            ("expiry", "Expiry"),
+            ("spot_935", "9:35 stock"),
+            ("strike", "Strike"),
+            ("opt_932", "Call 9:32"),
+            ("opt_935", "Call 9:35"),
+            ("opt_945", "Call 9:45"),
+            ("opt_1230", "Call 12:30"),
+            ("pct_935_to_1230", "9:35→12:30"),
+        ],
+    },
 ]
 
 
