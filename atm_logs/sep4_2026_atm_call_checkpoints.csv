@@ -14,3 +14,4 @@ TSEM,2026-09-04,call,212.0,2026-09-04,0DTE,212.5,TSEM260904C00212500,,,4.62,,,no
 COHR,2026-09-04,call,273.38,2026-09-04,0DTE,272.5,COHR260904C00272500,2.0,2.0,4.7,,,no bar,no bar,,,,no 12:30/3:30 bars yet; chain lastPrice=10.0
 SMCI,2026-09-04,call,38.79,2026-09-04,0DTE,39.0,SMCI260904C00039000,0.22,0.4,0.36,1.5,,15m 12:15-12:30,no bar,275.0,316.7,,
 FIVE,2026-09-04,call,240.33,2026-09-18,this_month,240.0,FIVE260918C00240000,7.1,7.1,8.36,,,no bar,no bar,,,,no 12:30/3:30 bars yet; chain lastPrice=17.4
+TOTAL,2026-09-04,call,5062.5129,,15 names,5067.0,,46.76,64.58,97.13,47.26,,,,50.9,22.1,,Sums skip blanks. Pct totals are paired-premium change (n=8).

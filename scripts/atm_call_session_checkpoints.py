@@ -296,6 +296,72 @@ def unix_dates(exps: list[int]) -> list[tuple[int, date]]:
     return out
 
 
+def _num(v) -> float | None:
+    if v is None or v == "":
+        return None
+    try:
+        return float(v)
+    except (TypeError, ValueError):
+        return None
+
+
+def _sum_field(rows: list[dict], key: str) -> float | None:
+    vals = [_num(r.get(key)) for r in rows]
+    vals = [v for v in vals if v is not None]
+    if not vals:
+        return None
+    return round(sum(vals), 4)
+
+
+def _paired_pct(rows: list[dict], a_key: str, b_key: str) -> tuple[float | None, int]:
+    """Pct change of summed premiums for rows that have both a and b."""
+    a_sum = 0.0
+    b_sum = 0.0
+    n = 0
+    for r in rows:
+        a = _num(r.get(a_key))
+        b = _num(r.get(b_key))
+        if a is None or b is None or a == 0:
+            continue
+        a_sum += a
+        b_sum += b
+        n += 1
+    if n == 0 or a_sum == 0:
+        return None, 0
+    return round(100.0 * (b_sum / a_sum - 1.0), 1), n
+
+
+def build_total_row(rows: list[dict], *, session, right: str) -> dict:
+    """Aggregate TOTAL row: sums skip blanks; pcts are paired-premium change."""
+    data = [r for r in rows if str(r.get("ticker", "")).upper() != "TOTAL"]
+    n = len(data)
+    pct_935_1230, n_paired = _paired_pct(data, "opt_935", "opt_1230")
+    pct_945_1230, _ = _paired_pct(data, "opt_945", "opt_1230")
+    pct_935_1530, _ = _paired_pct(data, "opt_935", "opt_1530")
+    note = f"Sums skip blanks. Pct totals are paired-premium change (n={n_paired})."
+    return {
+        "ticker": "TOTAL",
+        "session": session.isoformat() if hasattr(session, "isoformat") else str(session),
+        "right": right,
+        "spot_935": _sum_field(data, "spot_935") or "",
+        "expiry": "",
+        "expiry_kind": f"{n} names",
+        "strike": _sum_field(data, "strike") or "",
+        "option_symbol": "",
+        "opt_932": _sum_field(data, "opt_932") or "",
+        "opt_935": _sum_field(data, "opt_935") or "",
+        "opt_945": _sum_field(data, "opt_945") or "",
+        "opt_1230": _sum_field(data, "opt_1230") or "",
+        "opt_1530": _sum_field(data, "opt_1530") or "",
+        "opt_1230_bar": "",
+        "opt_1530_bar": "",
+        "pct_935_to_1230": pct_935_1230 if pct_935_1230 is not None else "",
+        "pct_945_to_1230": pct_945_1230 if pct_945_1230 is not None else "",
+        "pct_935_to_1530": pct_935_1530 if pct_935_1530 is not None else "",
+        "notes": note,
+    }
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description="ATM option 12:30/3:30 checkpoints")
     ap.add_argument("--right", choices=("call", "put"), default="call")
@@ -481,12 +547,16 @@ def main() -> int:
         rows.append(row)
         time.sleep(0.15 if i < 3 else 0.08)
 
+    if rows:
+        rows.append(build_total_row(rows, session=session, right=right))
+
     fields = list(rows[0].keys()) if rows else []
     with out.open("w", newline="") as f:
         w = csv.DictWriter(f, fieldnames=fields)
         w.writeheader()
         w.writerows(rows)
-    print(f"wrote {out} rows={len(rows)}")
+    data_n = sum(1 for r in rows if str(r.get("ticker", "")).upper() != "TOTAL")
+    print(f"wrote {out} rows={data_n}")
     for r in rows:
         print(
             f"{r['ticker']:6} spot={r['spot_935']!s:>8} K={r['strike']!s:>7}  "
