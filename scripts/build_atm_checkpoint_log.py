@@ -165,6 +165,71 @@ def is_total(row: dict) -> bool:
     return (row.get("ticker") or "").strip().upper() == "TOTAL"
 
 
+def _num(v) -> float | None:
+    if v is None or v == "":
+        return None
+    try:
+        return float(v)
+    except (TypeError, ValueError):
+        return None
+
+
+def _sum_field(rows: list[dict], key: str) -> str:
+    vals = [_num(r.get(key)) for r in rows]
+    vals = [v for v in vals if v is not None]
+    if not vals:
+        return ""
+    return str(round(sum(vals), 4))
+
+
+def _paired_pct(rows: list[dict], a_key: str, b_key: str) -> str:
+    a_sum = b_sum = 0.0
+    n = 0
+    for r in rows:
+        a = _num(r.get(a_key))
+        b = _num(r.get(b_key))
+        if a is None or b is None or a == 0:
+            continue
+        a_sum += a
+        b_sum += b
+        n += 1
+    if n == 0 or a_sum == 0:
+        return ""
+    return str(round(100.0 * (b_sum / a_sum - 1.0), 1))
+
+
+def ensure_total_row(rows: list[dict], *, right: str) -> list[dict]:
+    """Guarantee a TOTAL row is present and is last."""
+    data = [r for r in rows if not is_total(r)]
+    existing = [r for r in rows if is_total(r)]
+    if existing:
+        return data + existing[-1:]
+    session = (data[0].get("session") if data else "") or ""
+    n = len(data)
+    total = {
+        "ticker": "TOTAL",
+        "session": session,
+        "right": right,
+        "spot_935": _sum_field(data, "spot_935"),
+        "expiry": "",
+        "expiry_kind": f"{n} names",
+        "strike": _sum_field(data, "strike"),
+        "option_symbol": "",
+        "opt_932": _sum_field(data, "opt_932"),
+        "opt_935": _sum_field(data, "opt_935"),
+        "opt_945": _sum_field(data, "opt_945"),
+        "opt_1230": _sum_field(data, "opt_1230"),
+        "opt_1530": _sum_field(data, "opt_1530"),
+        "opt_1230_bar": "",
+        "opt_1530_bar": "",
+        "pct_935_to_1230": _paired_pct(data, "opt_935", "opt_1230"),
+        "pct_945_to_1230": _paired_pct(data, "opt_945", "opt_1230"),
+        "pct_935_to_1530": _paired_pct(data, "opt_935", "opt_1530"),
+        "notes": "Sums skip blanks. Pct totals are paired-premium change.",
+    }
+    return data + [total]
+
+
 def pct_class(v: str) -> str:
     try:
         x = float((v or "").strip())
@@ -185,6 +250,7 @@ def main() -> int:
         if not path.exists():
             raise SystemExit(f"Missing {path}")
         rows = load_rows(path)
+        rows = ensure_total_row(rows, right=sess["right"])
         data_rows = [r for r in rows if not is_total(r)]
         total_rows = [r for r in rows if is_total(r)]
         n = len(data_rows)
@@ -193,11 +259,14 @@ def main() -> int:
             f'<span class="muted">({n} names)</span></li>'
         )
         thead = "".join(f"<th>{escape(label)}</th>" for _, label in sess["cols"])
-        body: list[str] = []
-        for r in data_rows + total_rows:
+
+        def render_row(r: dict, *, total: bool = False) -> str:
             cells: list[str] = []
             for key, _label in sess["cols"]:
                 raw = r.get(key, "")
+                # TOTAL stores "N names" in expiry_kind; show it under Expiry.
+                if total and key == "expiry" and not (raw or "").strip():
+                    raw = r.get("expiry_kind", "") or "TOTAL"
                 is_pct = key.startswith("pct_")
                 cls = pct_class(raw) if is_pct else ""
                 if key in {
@@ -215,8 +284,16 @@ def main() -> int:
                     txt = escape((raw or "—").strip() or "—")
                     align = ""
                 cells.append(f'<td class="{align} {cls}">{txt}</td>')
-            tr_cls = "total" if is_total(r) else ""
-            body.append(f'<tr class="{tr_cls}">{"".join(cells)}</tr>')
+            tr_cls = "total" if total else ""
+            return f'<tr class="{tr_cls}">{"".join(cells)}</tr>'
+
+        body_rows = [render_row(r) for r in data_rows]
+        # If CSV somehow omitted TOTAL, synthesize nothing here — totals come from CSV.
+        # Always render TOTAL rows last via <tfoot> so they stay the final table row.
+        foot_rows = [render_row(r, total=True) for r in total_rows]
+        tfoot = (
+            f"<tfoot>{''.join(foot_rows)}</tfoot>" if foot_rows else ""
+        )
         sections.append(
             f"""
     <section class="day" id="{sess['id']}">
@@ -235,8 +312,9 @@ def main() -> int:
         <table>
           <thead><tr>{thead}</tr></thead>
           <tbody>
-            {''.join(body)}
+            {''.join(body_rows)}
           </tbody>
+          {tfoot}
         </table>
       </div>
     </section>
@@ -339,9 +417,15 @@ def main() -> int:
     }}
     tr:nth-child(even) td {{ background: rgba(255,255,255,0.02); }}
     tr.total td {{
-      background: var(--total);
+      background: #243447;
       font-weight: 700;
-      border-top: 1px solid #35507a;
+      border-top: 2px solid #6cb6ff;
+    }}
+    tfoot tr.total td {{
+      position: sticky;
+      bottom: 0;
+      z-index: 1;
+      box-shadow: 0 -6px 12px rgba(0,0,0,0.25);
     }}
     td.num {{ text-align: right; font-family: "IBM Plex Mono", ui-monospace, monospace; }}
     td.pos {{ color: var(--green); }}
