@@ -1,24 +1,24 @@
 ticker,session,right,spot_935,expiry,expiry_kind,strike,option_symbol,opt_932,opt_935,opt_945,opt_1030,opt_1030_bar,opt_1230,opt_1530,opt_1230_bar,opt_1530_bar,pct_935_to_945,pct_935_to_1030,pct_935_to_1230,pct_945_to_1230,pct_935_to_1530,notes
-AAPL,2026-09-10,call,319.4,2026-09-11,this_week,320.0,AAPL260911C00320000,2.65,2.85,3.25,2.16,5m 10:25-10:30,,,no bar,no bar,14.0,-24.2,,,,no 12:30/3:30 bars yet; chain lastPrice=3.7
+AAPL,2026-09-10,call,319.4,2026-09-11,this_week,320.0,AAPL260911C00320000,2.65,2.85,3.25,2.16,5m 10:25-10:30,3.5,,5m 12:25-12:30,no bar,14.0,-24.2,22.8,7.7,,no 12:30/3:30 bars yet; chain lastPrice=3.7
 MDB,2026-09-10,call,358.425,2026-09-11,this_week,357.5,MDB260911C00357500,,,,,no bar,,,no bar,no bar,,,,,,no 12:30/3:30 bars yet; chain lastPrice=16.05
 UI,2026-09-10,call,536.34,,,,,,,,,,,,,,,,,,,no usable expiration
 BSP,2026-09-10,call,38.84,2026-09-18,this_month,40.0,BSP260918C00040000,,,,1.45,5m 10:10 (t-20m),,,no bar,no bar,,,,,,no 12:30/3:30 bars yet; chain lastPrice=1.48
-RDDT,2026-09-10,call,147.36,2026-09-11,this_week,147.0,RDDT260911C00147000,2.8,2.82,5.8,7.15,15m 10:15-10:30,,,no bar,no bar,105.7,153.5,,,,no 12:30/3:30 bars yet; chain lastPrice=7.76
+RDDT,2026-09-10,call,147.36,2026-09-11,this_week,147.0,RDDT260911C00147000,2.8,2.82,5.8,7.15,15m 10:15-10:30,9.63,,15m 12:15-12:30,no bar,105.7,153.5,241.5,66.0,,no 12:30/3:30 bars yet; chain lastPrice=7.76
 APP,2026-09-10,call,303.98,2026-09-11,this_week,305.0,APP260911C00305000,3.1,3.1,6.76,12.1,5m 10:25-10:30,,,no bar,no bar,118.1,290.3,,,,no 12:30/3:30 bars yet; chain lastPrice=9.8
 BBD,2026-09-10,call,3.4322,2026-09-18,this_month,3.5,BBD260918C00003500,0.06,0.06,0.06,,no bar,,,no bar,no bar,0.0,,,,,no 12:30/3:30 bars yet; chain lastPrice=0.06
-F,2026-09-10,call,13.455,2026-09-11,this_week,13.5,F260911C00013500,0.08,0.13,0.22,0.37,5m 10:25-10:30,,,no bar,no bar,69.2,184.6,,,,no 12:30/3:30 bars yet; chain lastPrice=0.4
-ELV,2026-09-10,call,417.36,2026-09-18,this_month,420.0,ELV260918C00420000,7.6,7.1,8.3,,no bar,,,no bar,no bar,16.9,,,,,no 12:30/3:30 bars yet; chain lastPrice=5.1
-OKTA,2026-09-10,call,171.154,2026-09-11,this_week,170.0,OKTA260911C00170000,,3.45,3.45,8.95,5m 10:25-10:30,,,no bar,no bar,0.0,159.4,,,,no 12:30/3:30 bars yet; chain lastPrice=7.0
+F,2026-09-10,call,13.455,2026-09-11,this_week,13.5,F260911C00013500,0.08,0.13,0.22,0.37,5m 10:25-10:30,0.4,,5m 12:25-12:30,no bar,69.2,184.6,207.7,81.8,,no 12:30/3:30 bars yet; chain lastPrice=0.4
+ELV,2026-09-10,call,417.36,2026-09-18,this_month,420.0,ELV260918C00420000,7.6,7.1,8.3,,no bar,6.1,,15m 12:30-12:45,no bar,16.9,,-14.1,-26.5,,no 12:30/3:30 bars yet; chain lastPrice=5.1
+OKTA,2026-09-10,call,171.154,2026-09-11,this_week,170.0,OKTA260911C00170000,,3.45,3.45,8.95,5m 10:25-10:30,4.12,,5m 12:25-12:30,no bar,0.0,159.4,19.4,19.4,,no 12:30/3:30 bars yet; chain lastPrice=7.0
 RBRK,2026-09-10,call,88.025,2026-09-11,this_week,88.0,RBRK260911C00088000,1.51,1.51,1.51,,no bar,,,no bar,no bar,0.0,,,,,no 12:30/3:30 bars yet; chain lastPrice=1.51
 NBIX,2026-09-10,call,156.495,2026-09-18,this_month,155.0,NBIX260918C00155000,,,,,no bar,,,no bar,no bar,,,,,,no 12:30/3:30 bars yet; chain lastPrice=2.6
 GDDY,2026-09-10,call,94.36,2026-09-11,this_week,94.0,GDDY260911C00094000,,,,2.0,15m 10:15-10:30,,,no bar,no bar,,,,,,no 12:30/3:30 bars yet; chain lastPrice=2.58
 CNC,2026-09-10,call,67.275,2026-09-11,this_week,67.0,CNC260911C00067000,,,,,no bar,,,no bar,no bar,,,,,,no 12:30/3:30 bars yet; chain lastPrice=0.41
 TIGO,2026-09-10,call,93.915,2026-09-18,this_month,95.0,TIGO260918C00095000,,,,,no bar,,,no bar,no bar,,,,,,no 12:30/3:30 bars yet; chain lastPrice=3.0
-MOH,2026-09-10,call,205.85,2026-09-18,this_month,210.0,MOH260918C00210000,3.86,3.86,3.1,1.95,15m 10:13 (t-17m),,,no bar,no bar,-19.7,-49.5,,,,no 12:30/3:30 bars yet; chain lastPrice=1.95
-ASTS,2026-09-10,call,61.8824,2026-09-11,this_week,62.0,ASTS260911C00062000,1.3,1.4,2.59,1.8,15m 10:15-10:30,,,no bar,no bar,85.0,28.6,,,,no 12:30/3:30 bars yet; chain lastPrice=1.68
-RKLB,2026-09-10,call,62.52,2026-09-11,this_week,63.0,RKLB260911C00063000,0.9,1.06,2.4,2.05,5m 10:25-10:30,,,no bar,no bar,126.4,93.4,,,,no 12:30/3:30 bars yet; chain lastPrice=1.72
-FANG,2026-09-10,call,206.38,2026-09-18,this_month,210.0,FANG260918C00210000,3.33,3.12,3.12,1.65,5m 10:25-10:30,,,no bar,no bar,0.0,-47.1,,,,no 12:30/3:30 bars yet; chain lastPrice=1.85
-T,2026-09-10,call,25.435,2026-09-11,this_week,25.5,T260911C00025500,0.25,0.25,0.32,0.24,15m 10:15-10:30,,,no bar,no bar,28.0,-4.0,,,,no 12:30/3:30 bars yet; chain lastPrice=0.17
-SNOW,2026-09-10,call,326.33,2026-09-11,this_week,327.5,SNOW260911C00327500,,4.29,4.29,,no bar,,,no bar,no bar,0.0,,,,,no 12:30/3:30 bars yet; chain lastPrice=11.98
-SPCX,2026-09-10,call,149.52,2026-09-11,this_week,150.0,SPCX260911C00150000,1.91,2.45,3.26,2.38,5m 10:25-10:30,,,no bar,no bar,33.1,-2.9,,,,no 12:30/3:30 bars yet; chain lastPrice=2.39
-TOTAL,2026-09-10,call,3847.7336,,22 names,3323.5,,29.35,37.45,48.43,44.25,,,,,,29.3,66.6,,,,Sums skip blanks. Morning+10:30 (12:30 ignored). Paired 9:35→9:45 n=15; 9:35→10:30 n=11.
+MOH,2026-09-10,call,205.85,2026-09-18,this_month,210.0,MOH260918C00210000,3.86,3.86,3.1,1.95,15m 10:13 (t-17m),1.48,,15m 12:14 (t-16m),no bar,-19.7,-49.5,-61.7,-52.3,,no 12:30/3:30 bars yet; chain lastPrice=1.95
+ASTS,2026-09-10,call,61.8824,2026-09-11,this_week,62.0,ASTS260911C00062000,1.3,1.4,2.59,1.8,15m 10:15-10:30,1.33,,15m 12:15-12:30,no bar,85.0,28.6,-5.0,-48.6,,no 12:30/3:30 bars yet; chain lastPrice=1.68
+RKLB,2026-09-10,call,62.52,2026-09-11,this_week,63.0,RKLB260911C00063000,0.9,1.06,2.4,2.05,5m 10:25-10:30,1.23,,5m 12:25-12:30,no bar,126.4,93.4,16.0,-48.7,,no 12:30/3:30 bars yet; chain lastPrice=1.72
+FANG,2026-09-10,call,206.38,2026-09-18,this_month,210.0,FANG260918C00210000,3.33,3.12,3.12,1.65,5m 10:25-10:30,2.49,,15m 12:15-12:30,no bar,0.0,-47.1,-20.2,-20.2,,no 12:30/3:30 bars yet; chain lastPrice=1.85
+T,2026-09-10,call,25.435,2026-09-11,this_week,25.5,T260911C00025500,0.25,0.25,0.32,0.24,15m 10:15-10:30,0.22,,15m 12:30-12:45,no bar,28.0,-4.0,-12.0,-31.3,,no 12:30/3:30 bars yet; chain lastPrice=0.17
+SNOW,2026-09-10,call,326.33,2026-09-11,this_week,327.5,SNOW260911C00327500,,4.29,4.29,,no bar,7.35,,15m 12:15-12:30,no bar,0.0,,71.3,71.3,,no 12:30/3:30 bars yet; chain lastPrice=11.98
+SPCX,2026-09-10,call,149.52,2026-09-11,this_week,150.0,SPCX260911C00150000,1.91,2.45,3.26,2.38,5m 10:25-10:30,3.25,,5m 12:25-12:30,no bar,33.1,-2.9,32.7,-0.3,,no 12:30/3:30 bars yet; chain lastPrice=2.39
+TOTAL,2026-09-10,call,3847.7336,,22 names,3323.5,,29.35,37.45,48.43,44.25,,41.1,,,,29.3,66.6,25.4,2.5,,Sums skip blanks. Includes 10:30 + 12:30. Paired 9:35→10:30 n=11; 9:35→12:30 n=12.

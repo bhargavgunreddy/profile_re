@@ -142,10 +142,10 @@ SESSIONS = [
     },
     {
         "id": "sep10-calls",
-        "title": "Sep 10, 2026 — ATM Calls morning + 10:30 (22 names)",
+        "title": "Sep 10, 2026 — ATM Calls through 12:30 (22 names)",
         "file": "sep10_2026_atm_call_checkpoints.csv",
         "right": "call",
-        "blurb": "AAPL (appl), MDB, UI, BSP, RDDT, APP, BBD, F, ELV, OKTA, RBRK, NBIX, GDDY, CNC, TIGO, MOH, ASTS, RKLB, FANG, T, SNOW, SPCX. 12:30 ignored; includes 10:30.",
+        "blurb": "AAPL (appl), MDB, UI, BSP, RDDT, APP, BBD, F, ELV, OKTA, RBRK, NBIX, GDDY, CNC, TIGO, MOH, ASTS, RKLB, FANG, T, SNOW, SPCX. Columns through 12:30.",
         "cols": [
             ("ticker", "Ticker"),
             ("expiry", "Expiry"),
@@ -155,7 +155,8 @@ SESSIONS = [
             ("opt_935", "Call 9:35"),
             ("opt_945", "Call 9:45"),
             ("opt_1030", "Call 10:30"),
-            ("pct_935_to_1030", "9:35→10:30"),
+            ("opt_1230", "Call 12:30"),
+            ("pct_935_to_1230", "9:35→12:30"),
         ],
     },
 ]
