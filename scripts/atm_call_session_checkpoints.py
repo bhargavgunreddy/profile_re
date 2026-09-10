@@ -338,6 +338,7 @@ def build_total_row(rows: list[dict], *, session, right: str) -> dict:
     pct_935_1230, n_paired = _paired_pct(data, "opt_935", "opt_1230")
     pct_945_1230, _ = _paired_pct(data, "opt_945", "opt_1230")
     pct_935_1530, _ = _paired_pct(data, "opt_935", "opt_1530")
+    pct_935_1030, _ = _paired_pct(data, "opt_935", "opt_1030")
     note = f"Sums skip blanks. Pct totals are paired-premium change (n={n_paired})."
     return {
         "ticker": "TOTAL",
@@ -351,10 +352,13 @@ def build_total_row(rows: list[dict], *, session, right: str) -> dict:
         "opt_932": _sum_field(data, "opt_932") or "",
         "opt_935": _sum_field(data, "opt_935") or "",
         "opt_945": _sum_field(data, "opt_945") or "",
+        "opt_1030": _sum_field(data, "opt_1030") or "",
         "opt_1230": _sum_field(data, "opt_1230") or "",
         "opt_1530": _sum_field(data, "opt_1530") or "",
+        "opt_1030_bar": "",
         "opt_1230_bar": "",
         "opt_1530_bar": "",
+        "pct_935_to_1030": pct_935_1030 if pct_935_1030 is not None else "",
         "pct_935_to_1230": pct_935_1230 if pct_935_1230 is not None else "",
         "pct_945_to_1230": pct_945_1230 if pct_945_1230 is not None else "",
         "pct_935_to_1530": pct_935_1530 if pct_935_1530 is not None else "",
@@ -419,10 +423,13 @@ def main() -> int:
             "opt_932": "",
             "opt_935": "",
             "opt_945": "",
+            "opt_1030": "",
             "opt_1230": "",
             "opt_1530": "",
+            "opt_1030_bar": "",
             "opt_1230_bar": "",
             "opt_1530_bar": "",
+            "pct_935_to_1030": "",
             "pct_935_to_1230": "",
             "pct_945_to_1230": "",
             "pct_935_to_1530": "",
@@ -488,6 +495,7 @@ def main() -> int:
                     p945, _ = checkpoint_close(opt5, opt15, "09:45")
                 if p945 is None:
                     p945 = opt1.get("09:45")
+                p1030, src1030 = checkpoint_close(opt5, opt15, "10:30")
                 p1230, src1230 = checkpoint_close(opt5, opt15, "12:30")
                 p1530, src1530 = checkpoint_close(opt5, opt15, "15:30")
                 last_cand = (chosen, kind) == candidates[-1]
@@ -518,12 +526,17 @@ def main() -> int:
                     row["opt_935"] = round(p935, 4)
                 if p945 is not None:
                     row["opt_945"] = round(p945, 4)
+                row["opt_1030_bar"] = src1030
                 row["opt_1230_bar"] = src1230
                 row["opt_1530_bar"] = src1530
+                if p1030 is not None:
+                    row["opt_1030"] = round(p1030, 4)
                 if p1230 is not None:
                     row["opt_1230"] = round(p1230, 4)
                 if p1530 is not None:
                     row["opt_1530"] = round(p1530, 4)
+                if p935 and p1030 is not None:
+                    row["pct_935_to_1030"] = round(100.0 * (p1030 / p935 - 1.0), 1)
                 if p935 and p1230 is not None:
                     row["pct_935_to_1230"] = round(100.0 * (p1230 / p935 - 1.0), 1)
                 if p945 and p1230 is not None:
@@ -561,7 +574,8 @@ def main() -> int:
         print(
             f"{r['ticker']:6} spot={r['spot_935']!s:>8} K={r['strike']!s:>7}  "
             f"9:32={r['opt_932']!s:>6} 9:35={r['opt_935']!s:>6} "
-            f"9:45={r['opt_945']!s:>6} 12:30={r['opt_1230']!s:>6}  {r['notes']}"
+            f"9:45={r['opt_945']!s:>6} 10:30={r.get('opt_1030', '')!s:>6} "
+            f"12:30={r['opt_1230']!s:>6}  {r['notes']}"
         )
     return 0
 
