@@ -140,6 +140,23 @@ SESSIONS = [
             ("pct_935_to_1230", "9:35→12:30"),
         ],
     },
+    {
+        "id": "sep10-calls",
+        "title": "Sep 10, 2026 — ATM Calls morning only (22 names)",
+        "file": "sep10_2026_atm_call_checkpoints.csv",
+        "right": "call",
+        "blurb": "AAPL (appl), MDB, UI, BSP, RDDT, APP, BBD, F, ELV, OKTA, RBRK, NBIX, GDDY, CNC, TIGO, MOH, ASTS, RKLB, FANG, T, SNOW, SPCX. 12:30 ignored for this session.",
+        "cols": [
+            ("ticker", "Ticker"),
+            ("expiry", "Expiry"),
+            ("spot_935", "9:35 stock"),
+            ("strike", "Strike"),
+            ("opt_932", "Call 9:32"),
+            ("opt_935", "Call 9:35"),
+            ("opt_945", "Call 9:45"),
+            ("pct_935_to_945", "9:35→9:45"),
+        ],
+    },
 ]
 
 
