@@ -23,7 +23,8 @@ No server needed — each date’s table is embedded.
 | 2026-09-02 calls | `atm_logs/sep2_2026_atm_call_checkpoints.csv` |
 | 2026-09-03 calls | `atm_logs/sep3_2026_atm_call_checkpoints.csv` |
 | 2026-09-04 calls | `atm_logs/sep4_2026_atm_call_checkpoints.csv` |
-| 2026-09-10 calls (morning only) | `atm_logs/sep10_2026_atm_call_checkpoints.csv` |
+| 2026-09-10 calls | `atm_logs/sep10_2026_atm_call_checkpoints.csv` |
+| 2026-09-11 calls (through 10:30) | `atm_logs/sep11_2026_atm_call_checkpoints.csv` |
 
 ## Rebuild after adding a new date
 
