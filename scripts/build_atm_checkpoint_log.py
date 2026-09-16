@@ -177,6 +177,25 @@ SESSIONS = [
             ("pct_935_to_1030", "9:35→10:30"),
         ],
     },
+    {
+        "id": "sep15-calls",
+        "title": "Sep 15, 2026 — ATM Calls through 12:30 (30 names)",
+        "file": "sep15_2026_atm_call_checkpoints.csv",
+        "right": "call",
+        "blurb": "HPE–INTC semi/tech list (gut→HUT). Columns through 12:30.",
+        "cols": [
+            ("ticker", "Ticker"),
+            ("expiry", "Expiry"),
+            ("spot_935", "9:35 stock"),
+            ("strike", "Strike"),
+            ("opt_932", "Call 9:32"),
+            ("opt_935", "Call 9:35"),
+            ("opt_945", "Call 9:45"),
+            ("opt_1030", "Call 10:30"),
+            ("opt_1230", "Call 12:30"),
+            ("pct_935_to_1230", "9:35→12:30"),
+        ],
+    },
 ]
 
 
