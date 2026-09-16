@@ -179,10 +179,10 @@ SESSIONS = [
     },
     {
         "id": "sep15-calls",
-        "title": "Sep 15, 2026 — ATM Calls through 12:30 (30 names)",
+        "title": "Sep 15, 2026 — ATM Calls through 12:30 (35 names)",
         "file": "sep15_2026_atm_call_checkpoints.csv",
         "right": "call",
-        "blurb": "HPE–INTC semi/tech list (gut→HUT). Columns through 12:30.",
+        "blurb": "HPE–INTC semi/tech list + VRT, RKLB, FRO, TPL, NOK (gut→HUT). Columns through 12:30.",
         "cols": [
             ("ticker", "Ticker"),
             ("expiry", "Expiry"),
