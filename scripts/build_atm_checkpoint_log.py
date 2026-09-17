@@ -196,6 +196,25 @@ SESSIONS = [
             ("pct_935_to_1230", "9:35→12:30"),
         ],
     },
+    {
+        "id": "sep16-calls",
+        "title": "Sep 16, 2026 — ATM Calls through 12:30 (32 names)",
+        "file": "sep16_2026_atm_call_checkpoints.csv",
+        "right": "call",
+        "blurb": "FPS–SMCI list (ALAB deduped; INT→INTC; RVTL not found on Yahoo). Columns through 12:30.",
+        "cols": [
+            ("ticker", "Ticker"),
+            ("expiry", "Expiry"),
+            ("spot_935", "9:35 stock"),
+            ("strike", "Strike"),
+            ("opt_932", "Call 9:32"),
+            ("opt_935", "Call 9:35"),
+            ("opt_945", "Call 9:45"),
+            ("opt_1030", "Call 10:30"),
+            ("opt_1230", "Call 12:30"),
+            ("pct_935_to_1230", "9:35→12:30"),
+        ],
+    },
 ]
 
 
