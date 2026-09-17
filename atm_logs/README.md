@@ -27,6 +27,7 @@ No server needed — each date’s table is embedded.
 | 2026-09-11 calls (through 10:30) | `atm_logs/sep11_2026_atm_call_checkpoints.csv` |
 | 2026-09-15 calls | `atm_logs/sep15_2026_atm_call_checkpoints.csv` |
 | 2026-09-16 calls | `atm_logs/sep16_2026_atm_call_checkpoints.csv` |
+| 2026-09-16 puts (losers) | `atm_logs/sep16_2026_atm_put_checkpoints.csv` |
 
 ## Rebuild after adding a new date
 

@@ -216,6 +216,26 @@ SESSIONS = [
             ("pct_935_to_1230", "9:35→12:30"),
         ],
     },
+    {
+        "id": "sep16-puts",
+        "title": "Sep 16, 2026 — ATM Puts losers list (25 names)",
+        "file": "sep16_2026_atm_put_checkpoints.csv",
+        "right": "put",
+        "blurb": "JBHT, ON, AR, FANG, CHYM, CRCL, OXY, OVV, TPL, COP, VNOM, EXE, EOG, PR, DVN, RBLX, FSLR, HBAN, APA, HOOD, EQT, SWKS, CFG, CDE, KEY. Same columns as calls.",
+        "cols": [
+            ("ticker", "Ticker"),
+            ("expiry", "Expiry"),
+            ("spot_935", "9:35 stock"),
+            ("strike", "Put strike"),
+            ("opt_932", "Put 9:32"),
+            ("opt_935", "Put 9:35"),
+            ("opt_945", "Put 9:45"),
+            ("pct_932_to_945", "9:32→9:45"),
+            ("opt_1030", "Put 10:30"),
+            ("opt_1230", "Put 12:30"),
+            ("pct_935_to_1230", "9:35→12:30"),
+        ],
+    },
 ]
 
 
