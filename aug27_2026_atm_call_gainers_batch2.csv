@@ -1,0 +1,13 @@
+ticker,session,right,spot_935,expiry,expiry_kind,strike,option_symbol,opt_935,opt_1230,opt_1530,opt_1230_bar,opt_1530_bar,pct_935_to_1230,pct_935_to_1530,notes
+AMKR,2026-08-27,call,51.72,2026-08-28,this_week,52.0,AMKR260828C00052000,1.19,0.75,,15m 12:14 (t-16m),no bar,-37.0,,
+FROG,2026-08-27,call,98.36,2026-09-18,this_month,97.5,FROG260918C00097500,6.49,,,no bar,no bar,,,no 12:30/3:30 bars yet; chain lastPrice=8.3
+NOW,2026-08-27,call,132.415,2026-08-28,this_week,132.0,NOW260828C00132000,2.59,,,no bar,no bar,,,no 12:30/3:30 bars yet; chain lastPrice=4.39
+TEAM,2026-08-27,call,177.385,2026-08-28,this_week,177.5,TEAM260828C00177500,1.74,,,no bar,no bar,,,no 12:30/3:30 bars yet; chain lastPrice=4.95
+NVDA,2026-08-27,call,222.2984,2026-08-28,this_week,222.5,NVDA260828C00222500,2.99,6.55,,5m 12:25-12:30,no bar,119.1,,
+FIG,2026-08-27,call,28.49,2026-08-28,this_week,28.5,FIG260828C00028500,0.6,2.05,,15m 12:13 (t-17m),no bar,241.7,,
+DG,2026-08-27,call,128.0349,2026-08-28,this_week,128.0,DG260828C00128000,2.0,,,no bar,no bar,,,no 12:30/3:30 bars yet; chain lastPrice=2.9
+CLS,2026-08-27,call,319.85,2026-08-28,this_week,320.0,CLS260828C00320000,6.05,4.18,,5m 12:25-12:30,no bar,-30.9,,
+NET,2026-08-27,call,298.75,2026-08-28,this_week,297.5,NET260828C00297500,5.4,,,no bar,no bar,,,no 12:30/3:30 bars yet; chain lastPrice=7.14
+HUBS,2026-08-27,call,247.045,2026-09-18,this_month,250.0,HUBS260918C00250000,,19.0,,15m 12:21 (t-9m),no bar,,,
+NBIS,2026-08-27,call,223.317,2026-08-28,this_week,222.5,NBIS260828C00222500,6.7,3.25,,5m 12:25-12:30,no bar,-51.5,,
+SOXL,2026-08-27,call,122.71,2026-08-28,this_week,123.0,SOXL260828C00123000,4.75,2.33,,15m 12:15-12:30,no bar,-50.9,,
